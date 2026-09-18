@@ -1,7 +1,5 @@
 # MyAstroBoard Card
 
-## Beta Test In Progress - Do Not Install
-
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
 [![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
 
