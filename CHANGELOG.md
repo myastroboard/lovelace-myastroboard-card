@@ -2,7 +2,21 @@
 
 ## Unreleased
 
-- Nothing yet.
+### Features
+
+- None yet.
+
+### Fixes
+
+- None yet.
+
+### Breaking changes
+
+- None.
+
+### Notes
+
+- Beta test in progress. Do not install in production.
 
 ## 0.1.0 (2026-09-18)
 
