@@ -1,12 +1,14 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 jobs:
   attach:
-    name: Attach the card to the release
+    name: Create release and attach card
     runs-on: ubuntu-latest
     permissions:
       contents: write
