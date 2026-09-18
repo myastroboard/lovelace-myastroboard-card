@@ -1,0 +1,109 @@
+# The same information using only core Home Assistant cards - no custom card, no HACS.
+# Replace "backyard" / "alice" with your own device slugs.
+title: Observatory (core cards)
+views:
+  - title: Tonight
+    path: tonight
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: gauge
+            name: Night score
+            entity: sensor.myastroboard_backyard_observation_score
+            min: 0
+            max: 10
+            needle: true
+            severity:
+              green: 7
+              yellow: 4
+              red: 0
+          - type: entities
+            title: Sky now
+            entities:
+              - entity: sensor.myastroboard_backyard_sky_period
+              - entity: sensor.myastroboard_backyard_next_sky_period_at
+                name: Next period
+              - entity: binary_sensor.myastroboard_backyard_astronomical_night
+              - type: divider
+              - entity: sensor.myastroboard_backyard_sunset
+              - entity: sensor.myastroboard_backyard_astronomical_dusk
+              - entity: sensor.myastroboard_backyard_astronomical_dawn
+              - entity: sensor.myastroboard_backyard_sunrise
+              - type: divider
+              - entity: sensor.myastroboard_backyard_moon_phase
+              - entity: sensor.myastroboard_backyard_moon_illumination
+              - entity: sensor.myastroboard_backyard_next_moonrise
+              - entity: sensor.myastroboard_backyard_next_moonset
+
+      - type: vertical-stack
+        cards:
+          - type: gauge
+            name: Best window score
+            entity: sensor.myastroboard_backyard_best_window_score
+            min: 0
+            max: 100
+          - type: entities
+            title: Tonight
+            entities:
+              - entity: sensor.myastroboard_backyard_best_window_start
+              - entity: sensor.myastroboard_backyard_best_window_end
+              - entity: sensor.myastroboard_backyard_best_window_moon_condition
+              - entity: sensor.myastroboard_backyard_dark_window_start
+              - entity: sensor.myastroboard_backyard_dark_window_end
+              - type: divider
+              - entity: sensor.myastroboard_backyard_top_target_tonight
+              - entity: sensor.myastroboard_backyard_top_target_astroscore
+              - type: divider
+              - entity: sensor.myastroboard_backyard_next_event
+              - entity: sensor.myastroboard_backyard_next_event_at
+              - entity: sensor.myastroboard_backyard_next_iss_pass
+          - type: markdown
+            title: Top 5 targets
+            content: >-
+              {% set targets = state_attr('sensor.myastroboard_backyard_top_target_tonight', 'top_targets') or [] %}
+              {% for t in targets %}
+              - **{{ t.name }}** - {{ t.object_type }}, {{ t.constellation }}, score {{ '%.2f' | format(t.astro_score or 0) }}, max {{ (t.max_altitude or 0) | round }}°
+              {% endfor %}
+
+      - type: vertical-stack
+        cards:
+          - type: tile
+            entity: sensor.myastroboard_backyard_cloud_cover
+            name: Clouds
+          - type: horizontal-stack
+            cards:
+              - type: tile
+                entity: sensor.myastroboard_backyard_seeing
+              - type: tile
+                entity: sensor.myastroboard_backyard_transparency
+              - type: tile
+                entity: sensor.myastroboard_backyard_dew_risk
+          - type: horizontal-stack
+            cards:
+              - type: tile
+                entity: sensor.myastroboard_backyard_temperature
+              - type: tile
+                entity: sensor.myastroboard_backyard_humidity
+              - type: tile
+                entity: sensor.myastroboard_backyard_wind_speed
+
+      - type: vertical-stack
+        cards:
+          - type: entities
+            title: Alice
+            entities:
+              - entity: sensor.myastroboard_alice_astrodex_objects
+              - entity: sensor.myastroboard_alice_astrodex_pictures
+              - entity: sensor.myastroboard_alice_astrodex_constellations
+              - entity: sensor.myastroboard_alice_total_integration
+              - type: divider
+              - entity: sensor.myastroboard_alice_plan_state
+              - entity: binary_sensor.myastroboard_alice_plan_in_progress
+              - entity: sensor.myastroboard_alice_plan_progress
+              - entity: sensor.myastroboard_alice_plan_current_target
+              - entity: sensor.myastroboard_alice_plan_next_target
+              - entity: sensor.myastroboard_alice_active_equipment
+          - type: picture-entity
+            entity: image.myastroboard_alice_latest_astrodex_picture
+            name: Latest Astrodex picture
+            show_state: false

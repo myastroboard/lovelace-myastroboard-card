@@ -1,0 +1,75 @@
+# Automation ideas built on the MyAstroBoard entities. Replace "backyard" with your device slug
+# and the light / notify targets with yours.
+
+- alias: "Observatory: red light at astronomical dusk"
+  description: "Switch the observatory light to dim red when the sky reaches astronomical night."
+  trigger:
+    - platform: state
+      entity_id: sensor.myastroboard_backyard_sky_period
+      to: astronomical_night
+  action:
+    - service: light.turn_on
+      target:
+        entity_id: light.observatory
+      data:
+        rgb_color: [255, 0, 0]
+        brightness: 40
+
+- alias: "Observatory: white light at astronomical dawn"
+  trigger:
+    - platform: state
+      entity_id: sensor.myastroboard_backyard_sky_period
+      from: astronomical_night
+  action:
+    - service: light.turn_off
+      target:
+        entity_id: light.observatory
+
+- alias: "MyAstroBoard: tonight looks good"
+  description: "Once per evening, when the night score is high during the best window."
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.myastroboard_backyard_observation_score
+      above: 7
+  condition:
+    - condition: state
+      entity_id: binary_sensor.myastroboard_backyard_astronomical_night
+      state: "on"
+  action:
+    - service: notify.mobile_app_phone
+      data:
+        title: "Clear sky tonight"
+        message: >-
+          Night score {{ states('sensor.myastroboard_backyard_observation_score') }}/10,
+          best window {{ as_timestamp(states('sensor.myastroboard_backyard_best_window_start')) | timestamp_custom('%H:%M') }}
+          - {{ as_timestamp(states('sensor.myastroboard_backyard_best_window_end')) | timestamp_custom('%H:%M') }},
+          top target {{ states('sensor.myastroboard_backyard_top_target_tonight') }}.
+  mode: single
+
+- alias: "MyAstroBoard: ISS pass in 10 minutes"
+  trigger:
+    - platform: template
+      value_template: >-
+        {{ states('sensor.myastroboard_backyard_next_iss_pass') not in ['unknown', 'unavailable']
+           and 0 < (as_timestamp(states('sensor.myastroboard_backyard_next_iss_pass')) - as_timestamp(now())) <= 600 }}
+  action:
+    - service: notify.mobile_app_phone
+      data:
+        title: "ISS pass"
+        message: >-
+          ISS rises in 10 minutes, peak altitude
+          {{ states('sensor.myastroboard_backyard_next_iss_pass_peak_altitude') }}°.
+  mode: single
+
+- alias: "MyAstroBoard: plan started"
+  description: "The Plan My Night session of a user has begun."
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.myastroboard_alice_plan_in_progress
+      to: "on"
+  action:
+    - service: notify.mobile_app_phone
+      data:
+        message: >-
+          Plan started - first target {{ states('sensor.myastroboard_alice_plan_current_target') }}
+          with {{ states('sensor.myastroboard_alice_active_equipment') }}.

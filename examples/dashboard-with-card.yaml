@@ -1,0 +1,41 @@
+# A dashboard built with the MyAstroBoard card.
+# The visual editor stores a `device` id instead of `entity_prefix`; the prefix form below works
+# for hand-written YAML. Replace the prefixes with yours
+# (Settings -> Devices & services -> MQTT -> MyAstroBoard - <name>).
+title: Observatory
+views:
+  - title: Tonight
+    path: tonight
+    cards:
+      - type: custom:myastroboard-card
+        mode: sky
+        entity_prefix: myastroboard_backyard
+        title: Backyard - sky now
+      - type: custom:myastroboard-card
+        mode: tonight
+        entity_prefix: myastroboard_backyard
+        title: Backyard - tonight
+      - type: custom:myastroboard-card
+        mode: activity
+        entity_prefix: myastroboard_alice
+        title: Alice
+      # A second location gets its own pair of cards
+      - type: custom:myastroboard-card
+        mode: sky
+        entity_prefix: myastroboard_mountain_site
+        title: Mountain site - sky now
+        show_weather: false
+      - type: custom:myastroboard-card
+        mode: tonight
+        entity_prefix: myastroboard_mountain_site
+        title: Mountain site - tonight
+        top_targets: 3
+      # Board diagnostics with a core entities card
+      - type: entities
+        title: MyAstroBoard
+        entities:
+          - sensor.myastroboard_version
+          - binary_sensor.myastroboard_update_available
+          - binary_sensor.myastroboard_caches_ready
+          - sensor.myastroboard_skytonight_last_run
+          - sensor.myastroboard_last_publish

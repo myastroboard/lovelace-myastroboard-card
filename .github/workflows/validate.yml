@@ -1,0 +1,35 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  hacs:
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HACS action
+        # Pin to an immutable commit (release 22.5.0) for reproducible CI runs.
+        uses: hacs/action@d556e736723344f83838d08488c983a15381059a
+        with:
+          category: plugin
+
+  syntax:
+    name: Card syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Parse the card as a script
+        run: node -e "new Function(require('fs').readFileSync('dist/myastroboard-card.js','utf8')); console.log('syntax ok')"
+      - name: hacs.json points at the shipped file
+        run: |
+          test "$(node -p "require('./hacs.json').filename")" = "myastroboard-card.js"
+          test -f dist/myastroboard-card.js

@@ -1,0 +1,23 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  attach:
+    name: Attach the card to the release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the version in the card matches the tag
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          grep -q "const CARD_VERSION = '${tag}'" dist/myastroboard-card.js \
+            || { echo "CARD_VERSION in dist/myastroboard-card.js is not ${tag}"; exit 1; }
+      - name: Upload myastroboard-card.js
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/myastroboard-card.js
