@@ -4,11 +4,14 @@
 
 ### Features
 
-- None yet.
+- `tonight` mode: added a "Next CSS pass" row under "Coming up", alongside "Next ISS pass" (six
+  languages).
 
 ### Fixes
 
-- None yet.
+- `tonight` mode: stop showing the same ISS or CSS pass twice under "Coming up" (once as "Next
+  event", once as the dedicated row, a few minutes apart since one is timestamped at peak and the
+  other at rise) - the generic row is now skipped when it duplicates a dedicated row.
 
 ### Breaking changes
 

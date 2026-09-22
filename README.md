@@ -21,7 +21,7 @@ and **Home Assistant 2024.11 or newer**.
 | `mode` | Device | Shows |
 |---|---|---|
 | `sky` (default) | a location | night score gauge, current sky period and the next one, sunset / astronomical dusk / dawn / sunrise, Moon phase, illumination, rise and set, and (when the *Weather now* module is on) clouds, temperature, humidity, wind, seeing, transparency, dew risk |
-| `tonight` | a location | best-window score gauge with its hours and Moon condition, SkyTonight night window, dark window, night score, the top 5 targets with type / constellation / AstroScore / max altitude, next event and next ISS pass |
+| `tonight` | a location | best-window score gauge with its hours and Moon condition, SkyTonight night window, dark window, night score, the top 5 targets with type / constellation / AstroScore / max altitude, next event, next ISS pass and next CSS pass |
 | `activity` | a user | Astrodex objects / pictures / constellations, observation sessions and total integration, Plan My Night progress with the current and next target and the equipment in use, and the latest Astrodex picture |
 
 Every tile opens the entity's *more info* dialog when clicked.

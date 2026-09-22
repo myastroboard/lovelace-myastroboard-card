@@ -60,6 +60,7 @@ const ENTITIES = {
         nextEvent:    ['sensor', 'next_event'],
         nextEventAt:  ['sensor', 'next_event_at'],
         nextIss:      ['sensor', 'next_iss_pass'],
+        nextCss:      ['sensor', 'next_css_pass'],
         score:        ['sensor', 'observation_score'],
     },
     activity: {
@@ -99,6 +100,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Transparency', dew_risk: 'Dew risk',
         night_starts: 'Night starts', night_ends: 'Night ends', dark_window: 'Dark window', dark_until: 'Dark until',
         top_targets: 'Top targets', score: 'score', coming_up: 'Coming up', next_iss_pass: 'Next ISS pass',
+        next_css_pass: 'Next CSS pass',
         objects: 'Objects', pictures: 'Pictures', constellations: 'Constellations', sessions: 'Sessions',
         integration: 'Integration', last_session: 'Last session', plan_my_night: 'Plan My Night',
         no_plan: 'No plan tonight', targets_done: 'targets done', now: 'Now', next: 'Next', equipment: 'Equipment',
@@ -130,6 +132,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Transparence', dew_risk: 'Risque de rosée',
         night_starts: 'Début de nuit', night_ends: 'Fin de nuit', dark_window: 'Fenêtre de noirceur', dark_until: "Noir jusqu'à",
         top_targets: 'Meilleures cibles', score: 'score', coming_up: 'À venir', next_iss_pass: 'Prochain passage ISS',
+        next_css_pass: 'Prochain passage CSS',
         objects: 'Objets', pictures: 'Photos', constellations: 'Constellations', sessions: 'Sessions',
         integration: 'Intégration', last_session: 'Dernière session', plan_my_night: 'Plan My Night',
         no_plan: 'Pas de plan cette nuit', targets_done: 'cibles faites', now: 'En cours', next: 'Suivante', equipment: 'Matériel',
@@ -161,6 +164,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Transparencia', dew_risk: 'Riesgo de rocío',
         night_starts: 'Inicio de la noche', night_ends: 'Fin de la noche', dark_window: 'Ventana de oscuridad', dark_until: 'Oscuro hasta',
         top_targets: 'Mejores objetivos', score: 'puntuación', coming_up: 'Próximamente', next_iss_pass: 'Próximo paso de la ISS',
+        next_css_pass: 'Próximo paso de la CSS',
         objects: 'Objetos', pictures: 'Fotos', constellations: 'Constelaciones', sessions: 'Sesiones',
         integration: 'Integración', last_session: 'Última sesión', plan_my_night: 'Plan My Night',
         no_plan: 'Sin plan esta noche', targets_done: 'objetivos hechos', now: 'Ahora', next: 'Siguiente', equipment: 'Equipo',
@@ -192,6 +196,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Transparenz', dew_risk: 'Taurisiko',
         night_starts: 'Nachtbeginn', night_ends: 'Nachtende', dark_window: 'Dunkelfenster', dark_until: 'Dunkel bis',
         top_targets: 'Beste Ziele', score: 'Score', coming_up: 'Demnächst', next_iss_pass: 'Nächster ISS-Überflug',
+        next_css_pass: 'Nächster CSS-Überflug',
         objects: 'Objekte', pictures: 'Fotos', constellations: 'Sternbilder', sessions: 'Sitzungen',
         integration: 'Belichtung', last_session: 'Letzte Sitzung', plan_my_night: 'Plan My Night',
         no_plan: 'Kein Plan heute Nacht', targets_done: 'Ziele erledigt', now: 'Jetzt', next: 'Nächstes', equipment: 'Ausrüstung',
@@ -223,6 +228,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Trasparenza', dew_risk: 'Rischio di rugiada',
         night_starts: 'Inizio notte', night_ends: 'Fine notte', dark_window: 'Finestra di buio', dark_until: 'Buio fino a',
         top_targets: 'Obiettivi migliori', score: 'punteggio', coming_up: 'In arrivo', next_iss_pass: 'Prossimo passaggio ISS',
+        next_css_pass: 'Prossimo passaggio CSS',
         objects: 'Oggetti', pictures: 'Foto', constellations: 'Costellazioni', sessions: 'Sessioni',
         integration: 'Integrazione', last_session: 'Ultima sessione', plan_my_night: 'Plan My Night',
         no_plan: 'Nessun piano stanotte', targets_done: 'obiettivi completati', now: 'Ora', next: 'Prossimo', equipment: 'Attrezzatura',
@@ -254,6 +260,7 @@ const TRANSLATIONS = {
         seeing: 'Seeing', transparency: 'Transparência', dew_risk: 'Risco de orvalho',
         night_starts: 'Início da noite', night_ends: 'Fim da noite', dark_window: 'Janela de escuridão', dark_until: 'Escuro até',
         top_targets: 'Melhores alvos', score: 'pontuação', coming_up: 'A seguir', next_iss_pass: 'Próxima passagem da ISS',
+        next_css_pass: 'Próxima passagem da CSS',
         objects: 'Objetos', pictures: 'Fotos', constellations: 'Constelações', sessions: 'Sessões',
         integration: 'Integração', last_session: 'Última sessão', plan_my_night: 'Plan My Night',
         no_plan: 'Sem plano esta noite', targets_done: 'alvos concluídos', now: 'Agora', next: 'Seguinte', equipment: 'Equipamento',
@@ -753,11 +760,18 @@ class MyAstroBoardCard extends HTMLElement {
         section.appendChild(list);
         card.appendChild(section);
 
-        if (this._state('nextEvent') || this._state('nextIss')) {
+        if (this._state('nextEvent') || this._state('nextIss') || this._state('nextCss')) {
             const events = el('div', 'section');
             events.appendChild(el('h3', null, t('coming_up')));
             const elist = el('div', 'list');
-            if (this._state('nextEvent')) {
+            // "Next event" is the single earliest event across every kind MyAstroBoard tracks; when
+            // it is an ISS or CSS pass, it is the very same pass the dedicated row below reports
+            // (just timestamped at peak instead of rise). Showing both duplicates one pass under two
+            // labels a few minutes apart, so skip the generic row in that case.
+            const DEDICATED_ROW_BY_EVENT_TYPE = { 'ISS Pass': 'nextIss', 'CSS Pass': 'nextCss' };
+            const dedicatedKey = DEDICATED_ROW_BY_EVENT_TYPE[this._attr('nextEvent', 'event_type')];
+            const duplicatesDedicatedRow = dedicatedKey && this._state(dedicatedKey);
+            if (this._state('nextEvent') && !duplicatesDedicatedRow) {
                 const row = el('div', 'row');
                 row.appendChild(el('span', 'name', this._text('nextEvent')));
                 row.appendChild(el('span', 'meta', `${this._fmtTime('nextEventAt', true)} ${this._fmtRelative('nextEventAt')}`.trim()));
@@ -769,6 +783,13 @@ class MyAstroBoardCard extends HTMLElement {
                 row.appendChild(el('span', 'name', t('next_iss_pass')));
                 row.appendChild(el('span', 'meta', `${this._fmtTime('nextIss', true)} ${this._fmtRelative('nextIss')}`.trim()));
                 row.addEventListener('click', () => this._moreInfo('nextIss'));
+                elist.appendChild(row);
+            }
+            if (this._state('nextCss')) {
+                const row = el('div', 'row');
+                row.appendChild(el('span', 'name', t('next_css_pass')));
+                row.appendChild(el('span', 'meta', `${this._fmtTime('nextCss', true)} ${this._fmtRelative('nextCss')}`.trim()));
+                row.addEventListener('click', () => this._moreInfo('nextCss'));
                 elist.appendChild(row);
             }
             events.appendChild(elist);
