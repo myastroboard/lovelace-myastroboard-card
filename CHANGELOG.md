@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.1 (2026-09-22)
+
 ### Features
 
 - `tonight` mode: added a "Next CSS pass" row under "Coming up", alongside "Next ISS pass" (six
@@ -16,10 +18,6 @@
 ### Breaking changes
 
 - None.
-
-### Notes
-
-- Beta test in progress. Do not install in production.
 
 ## 0.1.0 (2026-09-18)
 

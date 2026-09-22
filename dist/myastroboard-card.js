@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.1.0';
+const CARD_VERSION = '0.1.1';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
 const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User' };
