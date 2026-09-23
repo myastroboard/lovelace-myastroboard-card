@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Features
+
+- None.
+
+### Fixes
+
+- None.
+
+### Breaking changes
+
+- None.
+
 ## 0.1.2 (2026-09-23)
 
 ### Features
