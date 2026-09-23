@@ -39,6 +39,8 @@ Every tile opens the entity's *more info* dialog when clicked.
 
 ### HACS (recommended)
 
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=myastroboard&repository=lovelace-myastroboard-card&category=plugin)
+
 1. HACS -> Dashboard -> three dots -> **Custom repositories**
 2. Repository `https://github.com/myastroboard/lovelace-myastroboard-card`, category **Dashboard**
 3. Install **MyAstroBoard Card**, reload the browser when HACS asks
@@ -140,6 +142,24 @@ The full list of entities, their JSON keys and the MQTT topics is in the MyAstro
 `dist/myastroboard-card.js` is a single, dependency-free ES file (a plain custom element, no Lit
 bundle, no build step). Edit it directly, reload the dashboard (Ctrl+F5) to test. Releases are
 GitHub releases tagged `vX.Y.Z` with the file attached; HACS reads the tag as the version.
+
+### Releasing
+
+`node scripts/prepare-release.js X.Y.Z` moves the CHANGELOG.md `Unreleased` entries into a dated
+`## X.Y.Z` section, resets the `Unreleased` template, and bumps `CARD_VERSION` in
+`dist/myastroboard-card.js` to match (`--dry-run` previews without writing). It does not touch
+git - review the diff, then:
+
+```
+git add CHANGELOG.md dist/myastroboard-card.js
+git commit -m "Prepare vX.Y.Z release"
+git tag vX.Y.Z
+git push && git push --tags
+```
+
+Pushing the tag triggers [`.github/workflows/release.yml`](.github/workflows/release.yml), which
+checks `CARD_VERSION` against the tag, builds the release notes from the matching CHANGELOG
+section, and attaches `myastroboard-card.js` to the GitHub release.
 
 ## License
 
