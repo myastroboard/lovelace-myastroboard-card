@@ -13,16 +13,25 @@ Requires **MyAstroBoard v1.6 or newer** with the MQTT connector enabled
 ([setup guide](https://github.com/myastroboard/myastroboard/blob/main/docs/HOME_ASSISTANT.md))
 and **Home Assistant 2024.11 or newer**.
 
-> WARNING
-> **MyAstroBoard v1.6 or newer** with the MQTT connector enabled
-
 ## Modes
 
-| `mode` | Device | Shows |
-|---|---|---|
-| `sky` (default) | a location | night score gauge, current sky period and the next one, sunset / astronomical dusk / dawn / sunrise, Moon phase, illumination, rise and set, and (when the *Weather now* module is on) clouds, temperature, humidity, wind, seeing, transparency, dew risk |
-| `tonight` | a location | night score gauge with the best window's hours and Moon condition, SkyTonight night window, dark window, best-window score, the top 5 targets with type / constellation / AstroScore / max altitude, next event, next ISS pass and next CSS pass |
-| `activity` | a user | Astrodex objects / pictures / constellations, observation sessions and total integration, Plan My Night progress with the current and next target and the equipment in use, and the latest Astrodex picture |
+### `sky` (default) - a location
+
+Night score gauge, current sky period and the next one, sunset / astronomical dusk / dawn /
+sunrise, Moon phase, illumination, rise and set, and (when the *Weather now* module is on)
+clouds, temperature, humidity, wind, seeing, transparency, dew risk.
+
+### `tonight` - a location
+
+Night score gauge with the best window's hours and Moon condition, SkyTonight night window,
+dark window, best-window score, the top 5 targets with type / constellation / AstroScore / max
+altitude, next event, next ISS pass and next CSS pass.
+
+### `activity` - a user
+
+Astrodex objects / pictures / constellations, observation sessions and total integration, Plan
+My Night progress with the current and next target and the equipment in use, and the latest
+Astrodex picture.
 
 Every tile opens the entity's *more info* dialog when clicked.
 
