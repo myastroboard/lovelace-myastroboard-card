@@ -1,7 +1,7 @@
 # MyAstroBoard Card
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://hacs.xyz)
-[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](LICENSE)
+[![License: AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](https://github.com/myastroboard/lovelace-myastroboard-card/blob/main/LICENSE)
 
 A Home Assistant Lovelace card for [MyAstroBoard](https://github.com/myastroboard/myastroboard).
 It shows what the MyAstroBoard **MQTT / Home Assistant** connector publishes - sky conditions
@@ -109,26 +109,27 @@ translated too; free text such as target names is shown as published.
 
 ## Examples
 
-- [`examples/dashboard-with-card.yaml`](examples/dashboard-with-card.yaml) - a dashboard built
-  with this card (two locations + one user)
-- [`examples/dashboard-core-cards.yaml`](examples/dashboard-core-cards.yaml) - the same
-  information with **core** Home Assistant cards only, for people who do not want a custom card
-- [`examples/automations.yaml`](examples/automations.yaml) - red light at astronomical dusk,
-  "tonight looks good" notification, ISS pass announcement
+- [`examples/dashboard-with-card.yaml`](https://github.com/myastroboard/lovelace-myastroboard-card/blob/main/examples/dashboard-with-card.yaml) -
+  a dashboard built with this card (two locations + one user)
+- [`examples/dashboard-core-cards.yaml`](https://github.com/myastroboard/lovelace-myastroboard-card/blob/main/examples/dashboard-core-cards.yaml) -
+  the same information with **core** Home Assistant cards only, for people who do not want a
+  custom card
+- [`examples/automations.yaml`](https://github.com/myastroboard/lovelace-myastroboard-card/blob/main/examples/automations.yaml) -
+  red light at astronomical dusk, "tonight looks good" notification, ISS pass announcement
 
 ## Preview
 
 ### Sky now
 
-![MyAstroBoard Card - Sky now](assets/now.png)
+![MyAstroBoard Card - Sky now](https://raw.githubusercontent.com/myastroboard/lovelace-myastroboard-card/main/assets/now.png)
 
 ### Tonight
 
-![MyAstroBoard Card - Tonight](assets/next_night.png)
+![MyAstroBoard Card - Tonight](https://raw.githubusercontent.com/myastroboard/lovelace-myastroboard-card/main/assets/next_night.png)
 
 ### Activity
 
-![MyAstroBoard Card - Activity](assets/activity.png)
+![MyAstroBoard Card - Activity](https://raw.githubusercontent.com/myastroboard/lovelace-myastroboard-card/main/assets/activity.png)
 
 Screenshots of the three card modes: sky conditions, tonight planning, and user activity.
 
@@ -157,7 +158,7 @@ git tag vX.Y.Z
 git push && git push --tags
 ```
 
-Pushing the tag triggers [`.github/workflows/release.yml`](.github/workflows/release.yml), which
+Pushing the tag triggers [`.github/workflows/release.yml`](https://github.com/myastroboard/lovelace-myastroboard-card/blob/main/.github/workflows/release.yml), which
 checks `CARD_VERSION` against the tag, builds the release notes from the matching CHANGELOG
 section, and attaches `myastroboard-card.js` to the GitHub release.
 
