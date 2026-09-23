@@ -93,7 +93,7 @@ const ENTITIES = {
 const TRANSLATIONS = {
     en: {
         sky_now: 'Sky now', tonight: 'Tonight', activity: 'Activity',
-        night_score: 'Night score', best_window: 'Best window', hours_short: 'h',
+        night_score: 'Night score', best_window: 'Best window', best_window_score: 'Best window score', hours_short: 'h',
         sunset: 'Sunset', astro_dusk: 'Astro dusk', astro_dawn: 'Astro dawn', sunrise: 'Sunrise',
         moon: 'Moon', illumination: 'Illumination', moonrise: 'Moonrise', moonset: 'Moonset',
         weather: 'Weather', clouds: 'Clouds', temperature: 'Temperature', humidity: 'Humidity', wind: 'Wind',
@@ -125,7 +125,7 @@ const TRANSLATIONS = {
     },
     fr: {
         sky_now: 'Ciel actuel', tonight: 'Cette nuit', activity: 'Activité',
-        night_score: 'Score de la nuit', best_window: 'Meilleure fenêtre', hours_short: 'h',
+        night_score: 'Score de la nuit', best_window: 'Meilleure fenêtre', best_window_score: 'Score de la fenêtre', hours_short: 'h',
         sunset: 'Coucher du Soleil', astro_dusk: 'Crépuscule astro', astro_dawn: 'Aube astro', sunrise: 'Lever du Soleil',
         moon: 'Lune', illumination: 'Illumination', moonrise: 'Lever de Lune', moonset: 'Coucher de Lune',
         weather: 'Météo', clouds: 'Nuages', temperature: 'Température', humidity: 'Humidité', wind: 'Vent',
@@ -157,7 +157,7 @@ const TRANSLATIONS = {
     },
     es: {
         sky_now: 'Cielo ahora', tonight: 'Esta noche', activity: 'Actividad',
-        night_score: 'Puntuación de la noche', best_window: 'Mejor ventana', hours_short: 'h',
+        night_score: 'Puntuación de la noche', best_window: 'Mejor ventana', best_window_score: 'Puntuación de la ventana', hours_short: 'h',
         sunset: 'Puesta de Sol', astro_dusk: 'Crepúsculo astro', astro_dawn: 'Amanecer astro', sunrise: 'Salida del Sol',
         moon: 'Luna', illumination: 'Iluminación', moonrise: 'Salida de la Luna', moonset: 'Puesta de la Luna',
         weather: 'Tiempo', clouds: 'Nubes', temperature: 'Temperatura', humidity: 'Humedad', wind: 'Viento',
@@ -189,7 +189,7 @@ const TRANSLATIONS = {
     },
     de: {
         sky_now: 'Himmel jetzt', tonight: 'Heute Nacht', activity: 'Aktivität',
-        night_score: 'Nacht-Score', best_window: 'Bestes Fenster', hours_short: 'h',
+        night_score: 'Nacht-Score', best_window: 'Bestes Fenster', best_window_score: 'Fenster-Score', hours_short: 'h',
         sunset: 'Sonnenuntergang', astro_dusk: 'Astro-Dämmerung', astro_dawn: 'Astro-Morgen', sunrise: 'Sonnenaufgang',
         moon: 'Mond', illumination: 'Beleuchtung', moonrise: 'Mondaufgang', moonset: 'Monduntergang',
         weather: 'Wetter', clouds: 'Wolken', temperature: 'Temperatur', humidity: 'Luftfeuchte', wind: 'Wind',
@@ -221,7 +221,7 @@ const TRANSLATIONS = {
     },
     it: {
         sky_now: 'Cielo ora', tonight: 'Stanotte', activity: 'Attività',
-        night_score: 'Punteggio della notte', best_window: 'Finestra migliore', hours_short: 'h',
+        night_score: 'Punteggio della notte', best_window: 'Finestra migliore', best_window_score: 'Punteggio della finestra', hours_short: 'h',
         sunset: 'Tramonto', astro_dusk: 'Crepuscolo astro', astro_dawn: 'Alba astro', sunrise: 'Alba',
         moon: 'Luna', illumination: 'Illuminazione', moonrise: 'Sorgere della Luna', moonset: 'Tramonto della Luna',
         weather: 'Meteo', clouds: 'Nuvole', temperature: 'Temperatura', humidity: 'Umidità', wind: 'Vento',
@@ -253,7 +253,7 @@ const TRANSLATIONS = {
     },
     pt: {
         sky_now: 'Céu agora', tonight: 'Esta noite', activity: 'Atividade',
-        night_score: 'Pontuação da noite', best_window: 'Melhor janela', hours_short: 'h',
+        night_score: 'Pontuação da noite', best_window: 'Melhor janela', best_window_score: 'Pontuação da janela', hours_short: 'h',
         sunset: 'Pôr do Sol', astro_dusk: 'Crepúsculo astro', astro_dawn: 'Aurora astro', sunrise: 'Nascer do Sol',
         moon: 'Lua', illumination: 'Iluminação', moonrise: 'Nascer da Lua', moonset: 'Pôr da Lua',
         weather: 'Meteorologia', clouds: 'Nuvens', temperature: 'Temperatura', humidity: 'Humidade', wind: 'Vento',
@@ -715,7 +715,11 @@ class MyAstroBoardCard extends HTMLElement {
 
     _renderTonight(card) {
         const t = this._t;
-        card.appendChild(this._hero('bestScore', num(this._state('bestScore'), 0), 100, sub => {
+        // Hero is the night score (observation_score, /10) - the same headline metric as "Sky
+        // now" - not the best-window score: that one only rates the best window itself (can be
+        // low on a short/moon-clipped window even on an excellent night) and stays available as
+        // its own grid tile below, so a bad best-window score no longer overshadows a good night.
+        card.appendChild(this._hero('score', num(this._state('score'), 1), 10, sub => {
             const start = this._fmtTime('bestStart');
             const end = this._fmtTime('bestEnd');
             sub.appendChild(document.createTextNode(`${t('best_window')} `));
@@ -731,7 +735,7 @@ class MyAstroBoardCard extends HTMLElement {
         grid.appendChild(this._tile('nightEnd', t('night_ends'), this._fmtTime('nightEnd'), 'mdi:weather-sunset-up'));
         grid.appendChild(this._tile('darkStart', t('dark_window'), this._fmtTime('darkStart'), 'mdi:moon-new'));
         grid.appendChild(this._tile('darkEnd', t('dark_until'), this._fmtTime('darkEnd'), 'mdi:moon-new'));
-        grid.appendChild(this._tile('score', t('night_score'), fmtNum(this._state('score'), 1), 'mdi:telescope', '/ 10'));
+        grid.appendChild(this._tile('bestScore', t('best_window_score'), fmtNum(this._state('bestScore'), 0), 'mdi:target', '/ 100'));
         card.appendChild(grid);
 
         const targets = this._attr('topTarget', 'top_targets');

@@ -8,7 +8,12 @@
 
 ### Fixes
 
-- None.
+- `tonight` mode: the hero gauge now shows the night score (`observation_score`, /10) instead of
+  the best-window score (/100) - the best window can score low on a short or Moon-clipped window
+  even on an excellent night, which made a great night look bad at a glance while the real night
+  score sat unnoticed in the grid below. The best-window score is still shown, now as its own
+  grid tile ("Best window score") instead of overlapping with the night score that used to be
+  there.
 
 ### Breaking changes
 
