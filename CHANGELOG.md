@@ -14,6 +14,29 @@
 
 - None.
 
+## 0.1.5 (2026-09-25)
+
+### Features
+
+- None.
+
+### Fixes
+
+- `tonight` mode: "Top targets"' object type (e.g. "Open Cluster", "Globular Cluster") was shown
+  as the raw untranslated sensor value - added an object type translation table (46 entries) across
+  all six languages, like the card already does for moon phase, dew risk and period.
+- `tonight` mode: "Coming up"'s generic "Next event" row showed the raw English title for anything
+  other than ISS/CSS passes (e.g. "Full Moon", solar/lunar eclipses, planetary conjunctions) - the
+  title is now rebuilt client-side and translated from the event's type/eclipse-type/planet
+  attributes when available, with new moon phase, eclipse type, planet and event title tables
+  across all six languages. Falls back to the raw English title, unchanged, for event kinds that
+  don't carry those attributes yet (meteor showers, comets, equinox/solstice) or on older
+  MyAstroBoard versions that don't publish them.
+
+### Breaking changes
+
+- None.
+
 ## 0.1.4 (2026-09-25)
 
 ### Features

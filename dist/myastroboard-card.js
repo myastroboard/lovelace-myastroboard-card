@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.1.4';
+const CARD_VERSION = '0.1.5';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
 const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User' };
@@ -130,6 +130,10 @@ const TRANSLATIONS = {
                       'Nova': 'Nova', 'Preplanetary Nebula': 'Preplanetary Nebula', 'Star': 'Star',
                       'Star Cloud': 'Star Cloud', 'Other/Unknown Type': 'Other/Unknown Type', 'HII Ionized Region': 'HII Ionized Region',
                       'Star Cluster + Nebula': 'Star Cluster + Nebula', 'Association of Stars': 'Association of Stars', 'Variable Nebula': 'Variable Nebula' },
+        planet: { 'Mercury': 'Mercury', 'Venus': 'Venus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturn', 'Uranus': 'Uranus', 'Neptune': 'Neptune', 'Pluto': 'Pluto' },
+        eclipse_type: { 'Total': 'Total', 'Partial': 'Partial', 'Annular': 'Annular', 'Penumbral': 'Penumbral' },
+        event_title: { 'Aurora Borealis': 'Aurora Borealis', 'ISS Solar Transit': 'ISS Solar Transit', 'ISS Lunar Transit': 'ISS Lunar Transit', 'CSS Solar Transit': 'CSS Solar Transit', 'CSS Lunar Transit': 'CSS Lunar Transit' },
+        event_templates: { solar_eclipse: '{eclipse_type} Solar Eclipse', lunar_eclipse: '{eclipse_type} Lunar Eclipse', conjunction: '{planet1} - {planet2} Conjunction', opposition: '{planet} at Opposition', elongation: '{planet} at Maximum Elongation', retrograde: '{planet} Retrograde Motion', moon_conjunction: 'Moon - {planet} Conjunction' },
         plan_state: { none: 'none', current: 'current', previous: 'previous' },
         editor: { mode: 'Mode', device: 'Device', title: 'Title', title_ph: 'Optional title', icon: 'Icon',
                   mode_sky: 'Sky now (a location)', mode_tonight: 'Tonight (a location)', mode_activity: 'Activity (a user)',
@@ -178,6 +182,10 @@ const TRANSLATIONS = {
                       'Nova': 'Nova', 'Preplanetary Nebula': 'Nébuleuse préplanétaire', 'Star': 'Étoile',
                       'Star Cloud': "Nuage d'étoiles", 'Other/Unknown Type': 'Type autre/inconnu', 'HII Ionized Region': 'Région HII ionisée',
                       'Star Cluster + Nebula': 'Amas stellaire + Nébuleuse', 'Association of Stars': "Association d'étoiles", 'Variable Nebula': 'Nébuleuse variable' },
+        planet: { 'Mercury': 'Mercure', 'Venus': 'Vénus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturne', 'Uranus': 'Uranus', 'Neptune': 'Neptune', 'Pluto': 'Pluton' },
+        eclipse_type: { 'Total': 'Totale', 'Partial': 'Partielle', 'Annular': 'Annulaire', 'Penumbral': 'Pénombrale' },
+        event_title: { 'Aurora Borealis': 'Aurore Boréale', 'ISS Solar Transit': "Transit solaire de l'ISS", 'ISS Lunar Transit': "Transit lunaire de l'ISS", 'CSS Solar Transit': 'Transit solaire CSS', 'CSS Lunar Transit': 'Transit lunaire CSS' },
+        event_templates: { solar_eclipse: 'Éclipse Solaire {eclipse_type}', lunar_eclipse: 'Éclipse Lunaire {eclipse_type}', conjunction: 'Conjonction {planet1} - {planet2}', opposition: '{planet} en opposition', elongation: "{planet} à l'élongation maximale", retrograde: 'Mouvement rétrograde de {planet}', moon_conjunction: 'Lune - {planet} Conjonction' },
         plan_state: { none: 'aucun', current: 'en cours', previous: 'passé' },
         editor: { mode: 'Mode', device: 'Appareil', title: 'Titre', title_ph: 'Titre optionnel', icon: 'Icône',
                   mode_sky: 'Ciel actuel (un lieu)', mode_tonight: 'Cette nuit (un lieu)', mode_activity: 'Activité (un utilisateur)',
@@ -226,6 +234,10 @@ const TRANSLATIONS = {
                       'Nova': 'Estrella nueva', 'Preplanetary Nebula': 'Nebulosa Preplanetaria', 'Star': 'Estrella',
                       'Star Cloud': 'Nube de estrellas', 'Other/Unknown Type': 'Tipo otro/desconocido', 'HII Ionized Region': 'Región HII ionizada',
                       'Star Cluster + Nebula': 'Cúmulo estelar + Nebulosa', 'Association of Stars': 'Asociación de estrellas', 'Variable Nebula': 'Nebulosa variable' },
+        planet: { 'Mercury': 'Mercurio', 'Venus': 'Venus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Neptuno', 'Pluto': 'Plutón' },
+        eclipse_type: { 'Total': 'Total', 'Partial': 'Parcial', 'Annular': 'Anular', 'Penumbral': 'Penumbral' },
+        event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Tránsito solar de la ISS', 'ISS Lunar Transit': 'Tránsito lunar de la ISS', 'CSS Solar Transit': 'Tránsito solar CSS', 'CSS Lunar Transit': 'Tránsito lunar CSS' },
+        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunción', opposition: '{planet} en oposición', elongation: '{planet} a máxima elongación', retrograde: '{planet} Movimiento retrógrado', moon_conjunction: 'Luna - {planet} Conjunción' },
         plan_state: { none: 'ninguno', current: 'en curso', previous: 'anterior' },
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Icono',
                   mode_sky: 'Cielo ahora (una ubicación)', mode_tonight: 'Esta noche (una ubicación)', mode_activity: 'Actividad (un usuario)',
@@ -274,6 +286,10 @@ const TRANSLATIONS = {
                       'Nova': 'Nova', 'Preplanetary Nebula': 'Präplanetarischer Nebel', 'Star': 'Stern',
                       'Star Cloud': 'Sternenwolke', 'Other/Unknown Type': 'Anderer/unbekannter Typ', 'HII Ionized Region': 'HII ionisiertes Gebiet',
                       'Star Cluster + Nebula': 'Sternhaufen + Nebel', 'Association of Stars': 'Sternassoziation', 'Variable Nebula': 'Variabler Nebel' },
+        planet: { 'Mercury': 'Merkur', 'Venus': 'Venus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturn', 'Uranus': 'Uranus', 'Neptune': 'Neptun', 'Pluto': 'Pluto' },
+        eclipse_type: { 'Total': 'Totale', 'Partial': 'Partielle', 'Annular': 'Ringförmig', 'Penumbral': 'Halbschatten' },
+        event_title: { 'Aurora Borealis': 'Nordlicht', 'ISS Solar Transit': 'ISS-Sonnentransit', 'ISS Lunar Transit': 'ISS-Mondtransit', 'CSS Solar Transit': 'CSS-Sonnentransit', 'CSS Lunar Transit': 'CSS-Mondtransit' },
+        event_templates: { solar_eclipse: '{eclipse_type} Sonnenfinsternis', lunar_eclipse: '{eclipse_type} Mondfinsternis', conjunction: '{planet1} - {planet2} Konjunktion', opposition: '{planet} bei Opposition', elongation: '{planet} bei maximaler Dehnung', retrograde: '{planet} Rückläufige Bewegung', moon_conjunction: 'Mond - {planet} Konjunktion' },
         plan_state: { none: 'keiner', current: 'aktuell', previous: 'vergangen' },
         editor: { mode: 'Modus', device: 'Gerät', title: 'Titel', title_ph: 'Optionaler Titel', icon: 'Symbol',
                   mode_sky: 'Himmel jetzt (ein Standort)', mode_tonight: 'Heute Nacht (ein Standort)', mode_activity: 'Aktivität (ein Benutzer)',
@@ -322,6 +338,10 @@ const TRANSLATIONS = {
                       'Nova': 'Nova', 'Preplanetary Nebula': 'Nebulosa preplanetaria', 'Star': 'Stella',
                       'Star Cloud': 'Nuvola stellare', 'Other/Unknown Type': 'Tipo altro/sconosciuto', 'HII Ionized Region': 'Regione ionizzata HII',
                       'Star Cluster + Nebula': 'Ammasso stellare + Nebulosa', 'Association of Stars': 'Associazione delle Stelle', 'Variable Nebula': 'Nebulosa variabile' },
+        planet: { 'Mercury': 'Mercurio', 'Venus': 'Venere', 'Mars': 'Marte', 'Jupiter': 'Giove', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Nettuno', 'Pluto': 'Plutone' },
+        eclipse_type: { 'Total': 'Totale', 'Partial': 'Parziale', 'Annular': 'Anulare', 'Penumbral': 'Penombra' },
+        event_title: { 'Aurora Borealis': 'Aurora boreale', 'ISS Solar Transit': 'Transito solare della ISS', 'ISS Lunar Transit': 'Transito lunare della ISS', 'CSS Solar Transit': 'Transito solare CSS', 'CSS Lunar Transit': 'Transito lunare CSS' },
+        event_templates: { solar_eclipse: 'Eclissi Solare {eclipse_type}', lunar_eclipse: 'Eclissi Lunare {eclipse_type}', conjunction: '{planet1} - {planet2} Congiunzione', opposition: "{planet} all'opposizione", elongation: '{planet} al massimo allungamento', retrograde: '{planet} Moto retrogrado', moon_conjunction: 'Luna - {planet} Congiunzione' },
         plan_state: { none: 'nessuno', current: 'in corso', previous: 'precedente' },
         editor: { mode: 'Modalità', device: 'Dispositivo', title: 'Titolo', title_ph: 'Titolo opzionale', icon: 'Icona',
                   mode_sky: 'Cielo ora (una località)', mode_tonight: 'Stanotte (una località)', mode_activity: 'Attività (un utente)',
@@ -370,6 +390,10 @@ const TRANSLATIONS = {
                       'Nova': 'Nova', 'Preplanetary Nebula': 'Nebulosa Pré-planetária', 'Star': 'Estrela',
                       'Star Cloud': 'Nuvem Estelar', 'Other/Unknown Type': 'Outro/tipo desconhecido', 'HII Ionized Region': 'Região Ionizada HII',
                       'Star Cluster + Nebula': 'Aglomerado Estelar + Nebulosa', 'Association of Stars': 'Associação de Estrelas', 'Variable Nebula': 'Nebulosa Variável' },
+        planet: { 'Mercury': 'Mercúrio', 'Venus': 'Vênus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Netuno', 'Pluto': 'Plutão' },
+        eclipse_type: { 'Total': 'Total', 'Partial': 'Parcial', 'Annular': 'Anular', 'Penumbral': 'Penumbral' },
+        event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Trânsito solar da ISS', 'ISS Lunar Transit': 'Trânsito lunar da ISS', 'CSS Solar Transit': 'Trânsito solar CSS', 'CSS Lunar Transit': 'Trânsito lunar CSS' },
+        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunção', opposition: '{planet} na oposição', elongation: '{planet} no alongamento máximo', retrograde: '{planet} Movimento retrógrado', moon_conjunction: 'Lua - {planet} Conjunção' },
         plan_state: { none: 'nenhum', current: 'em curso', previous: 'anterior' },
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Ícone',
                   mode_sky: 'Céu agora (um local)', mode_tonight: 'Esta noite (um local)', mode_activity: 'Atividade (um utilizador)',
@@ -666,6 +690,53 @@ class MyAstroBoardCard extends HTMLElement {
         return this._t(`period.${value}`) === `period.${value}` ? value : this._t(`period.${value}`);
     }
 
+    // "Next event" spans many kinds (eclipses, planetary conjunctions, aurora, moon phases...)
+    // and its MQTT state/title is always English prose composed server-side (MyAstroBoard has no
+    // per-connector language setting). Where the event carries plain enum attributes alongside
+    // that prose (event_type, eclipse_type, planet/planet2), rebuild the title client-side from
+    // those using this dashboard's own language, the same way moon_phase/object_type already do.
+    // Anything not covered here (meteor showers, comets, equinox/solstice, ...) falls back to the
+    // raw English title, which is still a legible fallback, not broken text.
+    _nextEventTitle() {
+        const t = this._t;
+        const raw = this._text('nextEvent');
+        const eventType = this._attr('nextEvent', 'event_type');
+        const attr = name => this._attr('nextEvent', name);
+        const translated = (dict, value) => {
+            const key = `${dict}.${value}`;
+            return t(key) === key ? value : t(key);
+        };
+        const compose = (templateKey, params) => {
+            let text = t(`event_templates.${templateKey}`);
+            Object.keys(params).forEach(p => { text = text.replace(`{${p}}`, params[p]); });
+            return text;
+        };
+        if (eventType === 'Solar Eclipse' && attr('eclipse_type')) {
+            return compose('solar_eclipse', { eclipse_type: translated('eclipse_type', attr('eclipse_type')) });
+        }
+        if (eventType === 'Lunar Eclipse' && attr('eclipse_type')) {
+            return compose('lunar_eclipse', { eclipse_type: translated('eclipse_type', attr('eclipse_type')) });
+        }
+        if (eventType === 'Planetary Conjunction' && attr('planet') && attr('planet2')) {
+            return compose('conjunction', { planet1: translated('planet', attr('planet')), planet2: translated('planet', attr('planet2')) });
+        }
+        if (eventType === 'Moon Conjunction' && attr('planet')) {
+            return compose('moon_conjunction', { planet: translated('planet', attr('planet')) });
+        }
+        if (eventType === 'Planetary Opposition' && attr('planet')) {
+            return compose('opposition', { planet: translated('planet', attr('planet')) });
+        }
+        if (eventType === 'Planetary Elongation' && attr('planet')) {
+            return compose('elongation', { planet: translated('planet', attr('planet')) });
+        }
+        if (eventType === 'Planetary Retrograde' && attr('planet')) {
+            return compose('retrograde', { planet: translated('planet', attr('planet')) });
+        }
+        if (t(`moon_phase.${raw}`) !== `moon_phase.${raw}`) return t(`moon_phase.${raw}`);
+        if (t(`event_title.${raw}`) !== `event_title.${raw}`) return t(`event_title.${raw}`);
+        return raw;
+    }
+
     // --- rendering -----------------------------------------------------------
 
     _renderKey() {
@@ -887,9 +958,7 @@ class MyAstroBoardCard extends HTMLElement {
             const duplicatesDedicatedRow = dedicatedKey && this._state(dedicatedKey);
             if (this._state('nextEvent') && !duplicatesDedicatedRow) {
                 const row = el('div', 'row');
-                const eventName = this._text('nextEvent');
-                const eventKey = `moon_phase.${eventName}`;
-                row.appendChild(el('span', 'name', t(eventKey) === eventKey ? eventName : t(eventKey)));
+                row.appendChild(el('span', 'name', this._nextEventTitle()));
                 row.appendChild(el('span', 'meta', `${this._fmtTime('nextEventAt', true)} ${this._fmtRelative('nextEventAt')}`.trim()));
                 row.addEventListener('click', () => this._moreInfo('nextEvent'));
                 elist.appendChild(row);
