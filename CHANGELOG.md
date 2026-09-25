@@ -14,6 +14,21 @@
 
 - None.
 
+## 0.1.3 (2026-09-25)
+
+### Features
+
+- None.
+
+### Fixes
+
+- `tonight` mode: "Dark window", "Dark until" and "Best window score" now sit on their own row of
+  three columns instead of wrapping 2-then-1 depending on card width.
+
+### Breaking changes
+
+- None.
+
 ## 0.1.2 (2026-09-23)
 
 ### Features

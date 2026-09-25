@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.1.2';
+const CARD_VERSION = '0.1.3';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
 const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User' };
@@ -336,6 +336,8 @@ const STYLES = `
     .gauge { height: 6px; border-radius: 3px; background: var(--divider-color); overflow: hidden; }
     .gauge > div { height: 100%; background: var(--primary-color); transition: width 0.4s ease; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px 12px; }
+    .grid + .grid { margin-top: 8px; }
+    .grid.grid-3 { grid-template-columns: repeat(3, 1fr); }
     .tile { cursor: pointer; padding: 6px 8px; border-radius: 8px; }
     .tile:hover { background: var(--secondary-background-color); }
     .tile .label { font-size: 0.75em; color: var(--secondary-text-color); display: flex; align-items: center; gap: 4px; }
@@ -733,10 +735,16 @@ class MyAstroBoardCard extends HTMLElement {
         const grid = el('div', 'grid');
         grid.appendChild(this._tile('nightStart', t('night_starts'), this._fmtTime('nightStart'), 'mdi:weather-night'));
         grid.appendChild(this._tile('nightEnd', t('night_ends'), this._fmtTime('nightEnd'), 'mdi:weather-sunset-up'));
-        grid.appendChild(this._tile('darkStart', t('dark_window'), this._fmtTime('darkStart'), 'mdi:moon-new'));
-        grid.appendChild(this._tile('darkEnd', t('dark_until'), this._fmtTime('darkEnd'), 'mdi:moon-new'));
-        grid.appendChild(this._tile('bestScore', t('best_window_score'), fmtNum(this._state('bestScore'), 0), 'mdi:target', '/ 100'));
         card.appendChild(grid);
+
+        // Own row, forced to 3 columns: these three describe the same dark window and read best
+        // together, whereas the auto-fill grid above would otherwise wrap them 2-then-1 depending
+        // on card width.
+        const darkGrid = el('div', 'grid grid-3');
+        darkGrid.appendChild(this._tile('darkStart', t('dark_window'), this._fmtTime('darkStart'), 'mdi:moon-new'));
+        darkGrid.appendChild(this._tile('darkEnd', t('dark_until'), this._fmtTime('darkEnd'), 'mdi:moon-new'));
+        darkGrid.appendChild(this._tile('bestScore', t('best_window_score'), fmtNum(this._state('bestScore'), 0), 'mdi:target', '/ 100'));
+        card.appendChild(darkGrid);
 
         const targets = this._attr('topTarget', 'top_targets');
         const section = el('div', 'section');
