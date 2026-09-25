@@ -3,9 +3,11 @@
  * https://github.com/myastroboard/lovelace-myastroboard-card
  *
  * Shows the entities the MyAstroBoard MQTT / Home Assistant connector publishes
- * (https://github.com/myastroboard/myastroboard/blob/main/docs/HOME_ASSISTANT.md) in three
- * modes: "sky" (conditions now), "tonight" (windows, top target, next event) and "activity"
- * (a user's Astrodex, plan and log). Dependency-free: no Lit bundle, no CDN, one file.
+ * (https://github.com/myastroboard/myastroboard/blob/main/docs/HOME_ASSISTANT.md) in four
+ * modes: "sky" (conditions now), "tonight" (windows, top target, next event), "activity" (a
+ * user's Astrodex, plan and log) and "diagnostic" (the board's own health: version, update,
+ * caches, SkyTonight scheduler, publish heartbeat). Dependency-free: no Lit bundle, no CDN, one
+ * file.
  *
  * Entities are resolved from the Home Assistant device registry (config `device`), or from an
  * entity id prefix (config `entity_prefix`) for hand-written YAML. Labels follow the Home
@@ -14,10 +16,16 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.1.5';
+const CARD_VERSION = '0.2.0';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
-const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User' };
+const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User', diagnostic: 'Dashboard' };
+const MODEL_LABEL_KEY = { Location: 'editor.model_location', User: 'editor.model_user', Dashboard: 'editor.model_dashboard' };
+// The board's own heartbeat sensor updates every publish cycle regardless of whether anything
+// changed - unlike every other key, which is only resent on change. MyAstroBoard does not
+// publish its configured publish interval (default 60 s, minimum 15 s) as an entity, so this is
+// a fixed, conservative "something stopped" threshold rather than the real interval.
+const DIAGNOSTIC_STALE_MINUTES = 5;
 
 // Entity object ids as Home Assistant derives them from the device name + the entity name the
 // connector declares ("MyAstroBoard - Backyard" + "Top target tonight" ->
@@ -84,6 +92,21 @@ const ENTITIES = {
         lastSession:    ['sensor', 'last_observation_session'],
         picture:        ['image', 'latest_astrodex_picture'],
     },
+    // Board device ("MyAstroBoard", model "Dashboard" - see build_board_device() in
+    // myastroboard/backend/connectors/mqtt_payloads.py). Suffixes follow the entity *name* HA
+    // slugifies, not the JSON key: "SkyTonight calculating" -> skytonight_calculating, even
+    // though the connector's own key for it is skytonight_running.
+    diagnostic: {
+        version:            ['sensor', 'version'],
+        update:             ['update', 'update'],
+        cachesReady:        ['binary_sensor', 'caches_ready'],
+        skytonightRunning:  ['binary_sensor', 'skytonight_calculating'],
+        skytonightLastRun:  ['sensor', 'skytonight_last_run'],
+        skytonightNextRun:  ['sensor', 'skytonight_next_run'],
+        lastPublish:        ['sensor', 'last_publish'],
+        locationsPublished: ['sensor', 'locations_published'],
+        usersPublished:     ['sensor', 'users_published'],
+    },
 };
 
 // ---------------------------------------------------------------------------
@@ -135,13 +158,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Aurora Borealis', 'ISS Solar Transit': 'ISS Solar Transit', 'ISS Lunar Transit': 'ISS Lunar Transit', 'CSS Solar Transit': 'CSS Solar Transit', 'CSS Lunar Transit': 'CSS Lunar Transit' },
         event_templates: { solar_eclipse: '{eclipse_type} Solar Eclipse', lunar_eclipse: '{eclipse_type} Lunar Eclipse', conjunction: '{planet1} - {planet2} Conjunction', opposition: '{planet} at Opposition', elongation: '{planet} at Maximum Elongation', retrograde: '{planet} Retrograde Motion', moon_conjunction: 'Moon - {planet} Conjunction' },
         plan_state: { none: 'none', current: 'current', previous: 'previous' },
+        diagnostic: 'Diagnostic', version: 'Version', update: 'Update', up_to_date: 'Up to date',
+        update_available: 'Update available', caches_ready: 'Caches ready', skytonight: 'SkyTonight',
+        running: 'Calculating', idle: 'Idle', last_run: 'Last run', next_run: 'Next run',
+        last_publish: 'Last publish', publication: 'Publication', locations_published: 'Locations published',
+        users_published: 'Users published', yes: 'Yes', no: 'No', ok: 'OK', attention: 'Attention',
         editor: { mode: 'Mode', device: 'Device', title: 'Title', title_ph: 'Optional title', icon: 'Icon',
                   mode_sky: 'Sky now (a location)', mode_tonight: 'Tonight (a location)', mode_activity: 'Activity (a user)',
+                  mode_diagnostic: 'Diagnostic (the board)',
                   no_devices: 'No MyAstroBoard {model} device found. Enable the matching module in MyAstroBoard (Parameters > Connectors > MQTT); a user device also needs that user to opt in under My settings > Customize.',
                   device_help: 'MyAstroBoard devices from Settings > Devices & services > MQTT.',
                   prefix: 'Entity prefix', prefix_help: 'Fallback when no device is found: the part of the entity ids before the entity name, e.g. myastroboard_backyard.',
                   picture: 'Latest picture', picture_hidden: 'Hidden', picture_small: 'Small thumbnail (160 px)', picture_medium: 'Thumbnail (240 px)', picture_large: 'Large (400 px)', picture_full: 'Natural size', picture_help: 'The thumbnail is cropped to the card width; click it to open the full picture.',
-                  model_location: 'location', model_user: 'user' },
+                  model_location: 'location', model_user: 'user', model_dashboard: 'board' },
     },
     fr: {
         sky_now: 'Ciel actuel', tonight: 'Cette nuit', activity: 'Activité',
@@ -187,13 +216,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Aurore Boréale', 'ISS Solar Transit': "Transit solaire de l'ISS", 'ISS Lunar Transit': "Transit lunaire de l'ISS", 'CSS Solar Transit': 'Transit solaire CSS', 'CSS Lunar Transit': 'Transit lunaire CSS' },
         event_templates: { solar_eclipse: 'Éclipse Solaire {eclipse_type}', lunar_eclipse: 'Éclipse Lunaire {eclipse_type}', conjunction: 'Conjonction {planet1} - {planet2}', opposition: '{planet} en opposition', elongation: "{planet} à l'élongation maximale", retrograde: 'Mouvement rétrograde de {planet}', moon_conjunction: 'Lune - {planet} Conjonction' },
         plan_state: { none: 'aucun', current: 'en cours', previous: 'passé' },
+        diagnostic: 'Diagnostic', version: 'Version', update: 'Mise à jour', up_to_date: 'À jour',
+        update_available: 'Mise à jour disponible', caches_ready: 'Caches prêts', skytonight: 'SkyTonight',
+        running: 'Calcul en cours', idle: 'Inactif', last_run: 'Dernier calcul', next_run: 'Prochain calcul',
+        last_publish: 'Dernière publication', publication: 'Publication', locations_published: 'Emplacements publiés',
+        users_published: 'Utilisateurs publiés', yes: 'Oui', no: 'Non', ok: 'OK', attention: 'Attention',
         editor: { mode: 'Mode', device: 'Appareil', title: 'Titre', title_ph: 'Titre optionnel', icon: 'Icône',
                   mode_sky: 'Ciel actuel (un lieu)', mode_tonight: 'Cette nuit (un lieu)', mode_activity: 'Activité (un utilisateur)',
+                  mode_diagnostic: 'Diagnostic (le tableau de bord)',
                   no_devices: "Aucun appareil MyAstroBoard de type {model} trouvé. Activez le module correspondant dans MyAstroBoard (Paramètres > Connecteurs > MQTT) ; un appareil utilisateur nécessite aussi que l'utilisateur active la publication dans Mes paramètres > Personnaliser.",
                   device_help: 'Appareils MyAstroBoard de Paramètres > Appareils et services > MQTT.',
                   prefix: "Préfixe d'entité", prefix_help: "Solution de repli sans appareil détecté : la partie des identifiants d'entité avant le nom, ex. myastroboard_jardin.",
                   picture: 'Dernière photo', picture_hidden: 'Masquée', picture_small: 'Petite vignette (160 px)', picture_medium: 'Vignette (240 px)', picture_large: 'Grande (400 px)', picture_full: 'Taille réelle', picture_help: 'La vignette est recadrée à la largeur de la carte ; un clic ouvre la photo complète.',
-                  model_location: 'lieu', model_user: 'utilisateur' },
+                  model_location: 'lieu', model_user: 'utilisateur', model_dashboard: 'tableau de bord' },
     },
     es: {
         sky_now: 'Cielo ahora', tonight: 'Esta noche', activity: 'Actividad',
@@ -239,13 +274,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Tránsito solar de la ISS', 'ISS Lunar Transit': 'Tránsito lunar de la ISS', 'CSS Solar Transit': 'Tránsito solar CSS', 'CSS Lunar Transit': 'Tránsito lunar CSS' },
         event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunción', opposition: '{planet} en oposición', elongation: '{planet} a máxima elongación', retrograde: '{planet} Movimiento retrógrado', moon_conjunction: 'Luna - {planet} Conjunción' },
         plan_state: { none: 'ninguno', current: 'en curso', previous: 'anterior' },
+        diagnostic: 'Diagnóstico', version: 'Versión', update: 'Actualización', up_to_date: 'Actualizado',
+        update_available: 'Actualización disponible', caches_ready: 'Cachés listos', skytonight: 'SkyTonight',
+        running: 'Calculando', idle: 'Inactivo', last_run: 'Último cálculo', next_run: 'Próximo cálculo',
+        last_publish: 'Última publicación', publication: 'Publicación', locations_published: 'Ubicaciones publicadas',
+        users_published: 'Usuarios publicados', yes: 'Sí', no: 'No', ok: 'OK', attention: 'Atención',
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Icono',
                   mode_sky: 'Cielo ahora (una ubicación)', mode_tonight: 'Esta noche (una ubicación)', mode_activity: 'Actividad (un usuario)',
+                  mode_diagnostic: 'Diagnóstico (el panel)',
                   no_devices: 'No se encontró ningún dispositivo MyAstroBoard de tipo {model}. Activa el módulo correspondiente en MyAstroBoard (Parámetros > Conectores > MQTT); un dispositivo de usuario también requiere que ese usuario active la publicación en Mi configuración > Personalizar.',
                   device_help: 'Dispositivos MyAstroBoard de Ajustes > Dispositivos y servicios > MQTT.',
                   prefix: 'Prefijo de entidad', prefix_help: 'Alternativa si no se detecta ningún dispositivo: la parte de los ids de entidad antes del nombre, p. ej. myastroboard_jardin.',
                   picture: 'Última foto', picture_hidden: 'Oculta', picture_small: 'Miniatura pequeña (160 px)', picture_medium: 'Miniatura (240 px)', picture_large: 'Grande (400 px)', picture_full: 'Tamaño real', picture_help: 'La miniatura se recorta al ancho de la tarjeta; un clic abre la foto completa.',
-                  model_location: 'ubicación', model_user: 'usuario' },
+                  model_location: 'ubicación', model_user: 'usuario', model_dashboard: 'panel' },
     },
     de: {
         sky_now: 'Himmel jetzt', tonight: 'Heute Nacht', activity: 'Aktivität',
@@ -291,13 +332,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Nordlicht', 'ISS Solar Transit': 'ISS-Sonnentransit', 'ISS Lunar Transit': 'ISS-Mondtransit', 'CSS Solar Transit': 'CSS-Sonnentransit', 'CSS Lunar Transit': 'CSS-Mondtransit' },
         event_templates: { solar_eclipse: '{eclipse_type} Sonnenfinsternis', lunar_eclipse: '{eclipse_type} Mondfinsternis', conjunction: '{planet1} - {planet2} Konjunktion', opposition: '{planet} bei Opposition', elongation: '{planet} bei maximaler Dehnung', retrograde: '{planet} Rückläufige Bewegung', moon_conjunction: 'Mond - {planet} Konjunktion' },
         plan_state: { none: 'keiner', current: 'aktuell', previous: 'vergangen' },
+        diagnostic: 'Diagnose', version: 'Version', update: 'Update', up_to_date: 'Aktuell',
+        update_available: 'Update verfügbar', caches_ready: 'Caches bereit', skytonight: 'SkyTonight',
+        running: 'Berechnung läuft', idle: 'Inaktiv', last_run: 'Letzte Berechnung', next_run: 'Nächste Berechnung',
+        last_publish: 'Letzte Veröffentlichung', publication: 'Veröffentlichung', locations_published: 'Veröffentlichte Standorte',
+        users_published: 'Veröffentlichte Benutzer', yes: 'Ja', no: 'Nein', ok: 'OK', attention: 'Achtung',
         editor: { mode: 'Modus', device: 'Gerät', title: 'Titel', title_ph: 'Optionaler Titel', icon: 'Symbol',
                   mode_sky: 'Himmel jetzt (ein Standort)', mode_tonight: 'Heute Nacht (ein Standort)', mode_activity: 'Aktivität (ein Benutzer)',
+                  mode_diagnostic: 'Diagnose (das Board)',
                   no_devices: 'Kein MyAstroBoard-Gerät vom Typ {model} gefunden. Aktiviere das passende Modul in MyAstroBoard (Parameter > Connectors > MQTT); ein Benutzergerät erfordert zusätzlich, dass der Benutzer unter Meine Einstellungen > Anpassen zustimmt.',
                   device_help: 'MyAstroBoard-Geräte aus Einstellungen > Geräte & Dienste > MQTT.',
                   prefix: 'Entitätspräfix', prefix_help: 'Ersatz, wenn kein Gerät gefunden wird: der Teil der Entitäts-IDs vor dem Namen, z. B. myastroboard_garten.',
                   picture: 'Neuestes Foto', picture_hidden: 'Ausgeblendet', picture_small: 'Kleine Vorschau (160 px)', picture_medium: 'Vorschau (240 px)', picture_large: 'Groß (400 px)', picture_full: 'Originalgröße', picture_help: 'Die Vorschau wird auf die Kartenbreite zugeschnitten; ein Klick öffnet das ganze Foto.',
-                  model_location: 'Standort', model_user: 'Benutzer' },
+                  model_location: 'Standort', model_user: 'Benutzer', model_dashboard: 'Board' },
     },
     it: {
         sky_now: 'Cielo ora', tonight: 'Stanotte', activity: 'Attività',
@@ -343,13 +390,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Aurora boreale', 'ISS Solar Transit': 'Transito solare della ISS', 'ISS Lunar Transit': 'Transito lunare della ISS', 'CSS Solar Transit': 'Transito solare CSS', 'CSS Lunar Transit': 'Transito lunare CSS' },
         event_templates: { solar_eclipse: 'Eclissi Solare {eclipse_type}', lunar_eclipse: 'Eclissi Lunare {eclipse_type}', conjunction: '{planet1} - {planet2} Congiunzione', opposition: "{planet} all'opposizione", elongation: '{planet} al massimo allungamento', retrograde: '{planet} Moto retrogrado', moon_conjunction: 'Luna - {planet} Congiunzione' },
         plan_state: { none: 'nessuno', current: 'in corso', previous: 'precedente' },
+        diagnostic: 'Diagnostica', version: 'Versione', update: 'Aggiornamento', up_to_date: 'Aggiornato',
+        update_available: 'Aggiornamento disponibile', caches_ready: 'Cache pronte', skytonight: 'SkyTonight',
+        running: 'Calcolo in corso', idle: 'Inattivo', last_run: 'Ultimo calcolo', next_run: 'Prossimo calcolo',
+        last_publish: 'Ultima pubblicazione', publication: 'Pubblicazione', locations_published: 'Località pubblicate',
+        users_published: 'Utenti pubblicati', yes: 'Sì', no: 'No', ok: 'OK', attention: 'Attenzione',
         editor: { mode: 'Modalità', device: 'Dispositivo', title: 'Titolo', title_ph: 'Titolo opzionale', icon: 'Icona',
                   mode_sky: 'Cielo ora (una località)', mode_tonight: 'Stanotte (una località)', mode_activity: 'Attività (un utente)',
+                  mode_diagnostic: 'Diagnostica (la scheda)',
                   no_devices: "Nessun dispositivo MyAstroBoard di tipo {model} trovato. Attiva il modulo corrispondente in MyAstroBoard (Parametri > Connettori > MQTT); un dispositivo utente richiede anche che l'utente attivi la pubblicazione in Le mie impostazioni > Personalizza.",
                   device_help: 'Dispositivi MyAstroBoard da Impostazioni > Dispositivi e servizi > MQTT.',
                   prefix: 'Prefisso entità', prefix_help: 'Ripiego quando nessun dispositivo viene trovato: la parte degli id entità prima del nome, es. myastroboard_giardino.',
                   picture: 'Ultima foto', picture_hidden: 'Nascosta', picture_small: 'Miniatura piccola (160 px)', picture_medium: 'Miniatura (240 px)', picture_large: 'Grande (400 px)', picture_full: 'Dimensione reale', picture_help: 'La miniatura è ritagliata alla larghezza della scheda; un clic apre la foto completa.',
-                  model_location: 'località', model_user: 'utente' },
+                  model_location: 'località', model_user: 'utente', model_dashboard: 'scheda' },
     },
     pt: {
         sky_now: 'Céu agora', tonight: 'Esta noite', activity: 'Atividade',
@@ -395,13 +448,19 @@ const TRANSLATIONS = {
         event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Trânsito solar da ISS', 'ISS Lunar Transit': 'Trânsito lunar da ISS', 'CSS Solar Transit': 'Trânsito solar CSS', 'CSS Lunar Transit': 'Trânsito lunar CSS' },
         event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunção', opposition: '{planet} na oposição', elongation: '{planet} no alongamento máximo', retrograde: '{planet} Movimento retrógrado', moon_conjunction: 'Lua - {planet} Conjunção' },
         plan_state: { none: 'nenhum', current: 'em curso', previous: 'anterior' },
+        diagnostic: 'Diagnóstico', version: 'Versão', update: 'Atualização', up_to_date: 'Atualizado',
+        update_available: 'Atualização disponível', caches_ready: 'Caches prontas', skytonight: 'SkyTonight',
+        running: 'A calcular', idle: 'Inativo', last_run: 'Último cálculo', next_run: 'Próximo cálculo',
+        last_publish: 'Última publicação', publication: 'Publicação', locations_published: 'Locais publicados',
+        users_published: 'Utilizadores publicados', yes: 'Sim', no: 'Não', ok: 'OK', attention: 'Atenção',
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Ícone',
                   mode_sky: 'Céu agora (um local)', mode_tonight: 'Esta noite (um local)', mode_activity: 'Atividade (um utilizador)',
+                  mode_diagnostic: 'Diagnóstico (o painel)',
                   no_devices: 'Nenhum dispositivo MyAstroBoard do tipo {model} encontrado. Ative o módulo correspondente no MyAstroBoard (Parâmetros > Conectores > MQTT); um dispositivo de utilizador também exige que esse utilizador ative a publicação em Minhas configurações > Personalizar.',
                   device_help: 'Dispositivos MyAstroBoard de Definições > Dispositivos e serviços > MQTT.',
                   prefix: 'Prefixo de entidade', prefix_help: 'Alternativa quando nenhum dispositivo é detetado: a parte dos ids de entidade antes do nome, p. ex. myastroboard_jardim.',
                   picture: 'Última foto', picture_hidden: 'Oculta', picture_small: 'Miniatura pequena (160 px)', picture_medium: 'Miniatura (240 px)', picture_large: 'Grande (400 px)', picture_full: 'Tamanho real', picture_help: 'A miniatura é recortada à largura do cartão; um clique abre a foto completa.',
-                  model_location: 'local', model_user: 'utilizador' },
+                  model_location: 'local', model_user: 'utilizador', model_dashboard: 'painel' },
     },
 };
 
@@ -447,14 +506,17 @@ const STYLES = `
     .title ha-icon { color: var(--state-icon-color, var(--primary-color)); }
     .badge { font-size: 0.8em; padding: 2px 10px; border-radius: 12px; background: var(--secondary-background-color); color: var(--secondary-text-color); white-space: nowrap; }
     .badge.on { background: var(--primary-color); color: var(--text-primary-color, #fff); }
+    .badge.error { background: var(--error-color, #db4437); color: #fff; }
     .hero { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
     .hero .big { font-size: 2.4em; font-weight: 300; line-height: 1; color: var(--primary-text-color); cursor: pointer; }
+    .hero .big.error { color: var(--error-color, #db4437); }
     .hero .unit { font-size: 0.45em; color: var(--secondary-text-color); margin-left: 2px; }
     .hero .right { flex: 1; }
     .hero .sub { color: var(--secondary-text-color); font-size: 0.9em; margin-top: 6px; }
     .hero .sub strong { color: var(--primary-text-color); font-weight: 500; }
     .gauge { height: 6px; border-radius: 3px; background: var(--divider-color); overflow: hidden; }
     .gauge > div { height: 100%; background: var(--primary-color); transition: width 0.4s ease; }
+    .gauge > div.error { background: var(--error-color, #db4437); }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px 12px; }
     .grid + .grid { margin-top: 8px; }
     .grid.grid-3 { grid-template-columns: repeat(3, 1fr); }
@@ -578,7 +640,7 @@ class MyAstroBoardCard extends HTMLElement {
     setConfig(config) {
         if (!config || typeof config !== 'object') throw new Error('Invalid configuration');
         const mode = config.mode || 'sky';
-        if (!ENTITIES[mode]) throw new Error(`Unknown mode "${mode}" - use sky, tonight or activity`);
+        if (!ENTITIES[mode]) throw new Error(`Unknown mode "${mode}" - use sky, tonight, activity or diagnostic`);
         const prefix = normalizePrefix(config.entity_prefix);
         if (!config.device && !prefix) throw new Error('device (from the editor) or entity_prefix is required');
         this._config = { ...config, mode, entity_prefix: prefix };
@@ -780,20 +842,43 @@ class MyAstroBoardCard extends HTMLElement {
         }
         if (this._config.mode === 'sky') this._renderSky(card);
         else if (this._config.mode === 'tonight') this._renderTonight(card);
+        else if (this._config.mode === 'diagnostic') this._renderDiagnostic(card);
         else this._renderActivity(card);
     }
 
     _defaultTitle() {
         const device = this._hass && this._hass.devices && this._config.device ? this._hass.devices[this._config.device] : null;
         const name = deviceName(device).replace(/^MyAstroBoard\s*-\s*/i, '');
-        const label = this._t({ sky: 'sky_now', tonight: 'tonight', activity: 'activity' }[this._config.mode]);
+        const label = this._t({ sky: 'sky_now', tonight: 'tonight', activity: 'activity', diagnostic: 'diagnostic' }[this._config.mode]);
         return name ? `${name} - ${label}` : label;
+    }
+
+    // Minutes since the board's heartbeat (last_publish), or null when it has never published /
+    // the timestamp cannot be parsed - treated the same as "stale" by _diagnosticHealth().
+    _diagnosticStaleMinutes() {
+        const state = this._state('lastPublish');
+        if (isUnknown(state)) return null;
+        const date = new Date(state.state);
+        if (Number.isNaN(date.getTime())) return null;
+        return (Date.now() - date.getTime()) / 60000;
+    }
+
+    _diagnosticHealth() {
+        const t = this._t;
+        const staleMin = this._diagnosticStaleMinutes();
+        const cachesState = this._state('cachesReady');
+        if (staleMin === null || staleMin >= DIAGNOSTIC_STALE_MINUTES || (cachesState && cachesState.state === 'off')) {
+            return { level: 'error', label: t('attention') };
+        }
+        const updateState = this._state('update');
+        if (updateState && updateState.state === 'on') return { level: 'info', label: t('update_available') };
+        return { level: 'ok', label: t('ok') };
     }
 
     _header() {
         const header = el('div', 'header');
         const title = el('div', 'title');
-        const icons = { sky: 'mdi:weather-night', tonight: 'mdi:telescope', activity: 'mdi:account-star' };
+        const icons = { sky: 'mdi:weather-night', tonight: 'mdi:telescope', activity: 'mdi:account-star', diagnostic: 'mdi:pulse' };
         title.appendChild(icon(this._config.icon || icons[this._config.mode]));
         title.appendChild(document.createTextNode(this._config.title || this._defaultTitle()));
         header.appendChild(title);
@@ -807,6 +892,10 @@ class MyAstroBoardCard extends HTMLElement {
             const planState = this._text('planState', 'none');
             const label = on ? this._t('plan_in_progress') : `${this._t('plan')}: ${this._t(`plan_state.${planState}`)}`;
             header.appendChild(el('span', `badge${on ? ' on' : ''}`, label));
+        } else if (this._config.mode === 'diagnostic') {
+            const health = this._diagnosticHealth();
+            const cls = health.level === 'error' ? ' error' : health.level === 'info' ? ' on' : '';
+            header.appendChild(el('span', `badge${cls}`, health.label));
         }
         return header;
     }
@@ -1032,6 +1121,54 @@ class MyAstroBoardCard extends HTMLElement {
             card.appendChild(wrap);
         }
     }
+
+    _renderDiagnostic(card) {
+        const t = this._t;
+        const health = this._diagnosticHealth();
+
+        const hero = el('div', 'hero');
+        const big = el('div', `big${health.level === 'error' ? ' error' : ''}`, this._fmtRelative('lastPublish') || '-');
+        big.addEventListener('click', () => this._moreInfo('lastPublish'));
+        hero.appendChild(big);
+        const right = el('div', 'right');
+        const gauge = el('div', 'gauge');
+        const fill = el('div');
+        const staleMin = this._diagnosticStaleMinutes();
+        const freshness = staleMin === null ? 0 : Math.max(0, Math.min(100, 100 - (staleMin / DIAGNOSTIC_STALE_MINUTES) * 100));
+        fill.style.width = `${freshness}%`;
+        if (health.level === 'error') fill.classList.add('error');
+        gauge.appendChild(fill);
+        right.appendChild(gauge);
+        const sub = el('div', 'sub');
+        sub.appendChild(document.createTextNode(`${t('last_publish')} - `));
+        sub.appendChild(el('strong', null, health.label));
+        right.appendChild(sub);
+        hero.appendChild(right);
+        card.appendChild(hero);
+
+        const grid = el('div', 'grid');
+        grid.appendChild(this._tile('version', t('version'), this._text('version'), 'mdi:tag'));
+        const updateState = this._state('update');
+        const updateOn = updateState && updateState.state === 'on';
+        const updateValue = isUnknown(updateState) ? '-' : updateOn ? (this._attr('update', 'latest_version') || t('update_available')) : t('up_to_date');
+        grid.appendChild(this._tile('update', t('update'), updateValue, 'mdi:tag-arrow-up'));
+        const cachesState = this._state('cachesReady');
+        grid.appendChild(this._tile('cachesReady', t('caches_ready'), isUnknown(cachesState) ? '-' : t(cachesState.state === 'on' ? 'yes' : 'no'), 'mdi:database-check'));
+        const runningState = this._state('skytonightRunning');
+        grid.appendChild(this._tile('skytonightRunning', t('skytonight'), isUnknown(runningState) ? '-' : t(runningState.state === 'on' ? 'running' : 'idle'), 'mdi:autorenew'));
+        grid.appendChild(this._tile('skytonightLastRun', t('last_run'), this._fmtTime('skytonightLastRun', true), 'mdi:history'));
+        grid.appendChild(this._tile('skytonightNextRun', t('next_run'), this._fmtTime('skytonightNextRun', true), 'mdi:clock-outline'));
+        card.appendChild(grid);
+
+        const section = el('div', 'section');
+        section.appendChild(el('h3', null, t('publication')));
+        const pgrid = el('div', 'grid');
+        pgrid.appendChild(this._tile('lastPublish', t('last_publish'), this._fmtTime('lastPublish', true), 'mdi:cloud-upload-outline'));
+        pgrid.appendChild(this._tile('locationsPublished', t('locations_published'), fmtNum(this._state('locationsPublished')), 'mdi:map-marker-multiple'));
+        pgrid.appendChild(this._tile('usersPublished', t('users_published'), fmtNum(this._state('usersPublished')), 'mdi:account-multiple'));
+        section.appendChild(pgrid);
+        card.appendChild(section);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -1096,7 +1233,7 @@ class MyAstroBoardCardEditor extends HTMLElement {
 
         const mode = this._config.mode || 'sky';
         const modeSelect = document.createElement('select');
-        [['sky', t('editor.mode_sky')], ['tonight', t('editor.mode_tonight')], ['activity', t('editor.mode_activity')]].forEach(([value, label]) => {
+        [['sky', t('editor.mode_sky')], ['tonight', t('editor.mode_tonight')], ['activity', t('editor.mode_activity')], ['diagnostic', t('editor.mode_diagnostic')]].forEach(([value, label]) => {
             const opt = document.createElement('option');
             opt.value = value;
             opt.textContent = label;
@@ -1142,7 +1279,7 @@ class MyAstroBoardCardEditor extends HTMLElement {
             });
             box.appendChild(this._field(t('editor.device'), deviceSelect, t('editor.device_help')));
         } else {
-            const note = el('div', null, t('editor.no_devices', { model: t(model === 'User' ? 'editor.model_user' : 'editor.model_location') }));
+            const note = el('div', null, t('editor.no_devices', { model: t(MODEL_LABEL_KEY[model] || 'editor.model_location') }));
             note.style.color = 'var(--warning-color, #ffa600)';
             note.style.fontSize = '0.85em';
             note.style.margin = '8px 0';
@@ -1221,7 +1358,7 @@ if (!window.customCards.some(c => c.type === CARD_TYPE)) {
     window.customCards.push({
         type: CARD_TYPE,
         name: 'MyAstroBoard Card',
-        description: 'Sky conditions, tonight\'s plan and your Astrodex activity from MyAstroBoard (MQTT connector)',
+        description: 'Sky conditions, tonight\'s plan, your Astrodex activity and board diagnostics from MyAstroBoard (MQTT connector)',
         preview: true,
         documentationURL: 'https://github.com/myastroboard/lovelace-myastroboard-card',
     });

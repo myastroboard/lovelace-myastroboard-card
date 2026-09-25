@@ -5,9 +5,9 @@
 
 A Home Assistant Lovelace card for [MyAstroBoard](https://github.com/myastroboard/myastroboard).
 It shows what the MyAstroBoard **MQTT / Home Assistant** connector publishes - sky conditions
-and night score, tonight's best window and top targets, and your own Astrodex / Plan My Night
-activity - in three ready-made layouts. No YAML on the MyAstroBoard side, no configuration
-beyond the entity prefix on the Home Assistant side.
+and night score, tonight's best window and top targets, your own Astrodex / Plan My Night
+activity, and the board's own health - in four ready-made layouts. No YAML on the MyAstroBoard
+side, no configuration beyond the entity prefix on the Home Assistant side.
 
 Requires **MyAstroBoard v1.6 or newer** with the MQTT connector enabled
 ([setup guide](https://github.com/myastroboard/myastroboard/blob/main/docs/HOME_ASSISTANT.md))
@@ -32,6 +32,14 @@ altitude, next event, next ISS pass and next CSS pass.
 Astrodex objects / pictures / constellations, observation sessions and total integration, Plan
 My Night progress with the current and next target and the equipment in use, and the latest
 Astrodex picture.
+
+### `diagnostic` - the board
+
+The connector's own health, not sky content: installed version and available update, cache
+readiness, SkyTonight scheduler state (calculating / last run / next run), and a publish
+heartbeat (last publish, locations and users published). The header badge and the heartbeat
+turn to the theme's error colour when the heartbeat has not updated in 5 minutes or the caches
+are not ready, so a stuck connector stands out without opening Developer tools.
 
 Every tile opens the entity's *more info* dialog when clicked.
 
@@ -66,7 +74,7 @@ hand-written alternative:
 
 ```yaml
 type: custom:myastroboard-card
-mode: sky                              # sky | tonight | activity
+mode: sky                              # sky | tonight | activity | diagnostic
 device: 3f2a9c...                      # set by the visual editor (device registry id)
 # entity_prefix: myastroboard_backyard # alternative to device, see below
 title: Backyard                        # optional (defaults to "<device> - <mode>")
@@ -94,6 +102,7 @@ name:
 | MyAstroBoard - Backyard | `myastroboard_backyard` |
 | MyAstroBoard - Mountain site | `myastroboard_mountain_site` |
 | MyAstroBoard - alice (a user, `activity` mode) | `myastroboard_alice` |
+| MyAstroBoard (the board, `diagnostic` mode) | `myastroboard` |
 
 With `device`, the card resolves its entities from the registry instead, so a renamed device
 keeps working. A user device only exists once that user has switched *Publish my activity to

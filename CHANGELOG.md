@@ -14,6 +14,25 @@
 
 - None.
 
+## 0.2.0 (2026-09-25)
+
+### Features
+
+- New `diagnostic` mode (the board device): version and available update, cache readiness,
+  SkyTonight scheduler state (calculating / last run / next run), and a publish heartbeat (last
+  publish, locations and users published). The header badge and the heartbeat switch to the
+  theme's error colour when the heartbeat is more than 5 minutes stale or the caches are not
+  ready, and to the accent colour when an update is available. Six languages, like the other
+  modes.
+
+### Fixes
+
+- None.
+
+### Breaking changes
+
+- None.
+
 ## 0.1.5 (2026-09-25)
 
 ### Features
