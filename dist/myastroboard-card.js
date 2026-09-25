@@ -16,7 +16,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.2.0';
+const CARD_VERSION = '0.2.1';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
 const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User', diagnostic: 'Dashboard' };
@@ -163,6 +163,7 @@ const TRANSLATIONS = {
         running: 'Calculating', idle: 'Idle', last_run: 'Last run', next_run: 'Next run',
         last_publish: 'Last publish', publication: 'Publication', locations_published: 'Locations published',
         users_published: 'Users published', yes: 'Yes', no: 'No', ok: 'OK', attention: 'Attention',
+        online: 'Online', offline: 'Offline', publish_late: 'Publish overdue',
         editor: { mode: 'Mode', device: 'Device', title: 'Title', title_ph: 'Optional title', icon: 'Icon',
                   mode_sky: 'Sky now (a location)', mode_tonight: 'Tonight (a location)', mode_activity: 'Activity (a user)',
                   mode_diagnostic: 'Diagnostic (the board)',
@@ -221,6 +222,7 @@ const TRANSLATIONS = {
         running: 'Calcul en cours', idle: 'Inactif', last_run: 'Dernier calcul', next_run: 'Prochain calcul',
         last_publish: 'Dernière publication', publication: 'Publication', locations_published: 'Emplacements publiés',
         users_published: 'Utilisateurs publiés', yes: 'Oui', no: 'Non', ok: 'OK', attention: 'Attention',
+        online: 'En ligne', offline: 'Hors ligne', publish_late: 'Publication en retard',
         editor: { mode: 'Mode', device: 'Appareil', title: 'Titre', title_ph: 'Titre optionnel', icon: 'Icône',
                   mode_sky: 'Ciel actuel (un lieu)', mode_tonight: 'Cette nuit (un lieu)', mode_activity: 'Activité (un utilisateur)',
                   mode_diagnostic: 'Diagnostic (le tableau de bord)',
@@ -279,6 +281,7 @@ const TRANSLATIONS = {
         running: 'Calculando', idle: 'Inactivo', last_run: 'Último cálculo', next_run: 'Próximo cálculo',
         last_publish: 'Última publicación', publication: 'Publicación', locations_published: 'Ubicaciones publicadas',
         users_published: 'Usuarios publicados', yes: 'Sí', no: 'No', ok: 'OK', attention: 'Atención',
+        online: 'En línea', offline: 'Sin conexión', publish_late: 'Publicación retrasada',
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Icono',
                   mode_sky: 'Cielo ahora (una ubicación)', mode_tonight: 'Esta noche (una ubicación)', mode_activity: 'Actividad (un usuario)',
                   mode_diagnostic: 'Diagnóstico (el panel)',
@@ -337,6 +340,7 @@ const TRANSLATIONS = {
         running: 'Berechnung läuft', idle: 'Inaktiv', last_run: 'Letzte Berechnung', next_run: 'Nächste Berechnung',
         last_publish: 'Letzte Veröffentlichung', publication: 'Veröffentlichung', locations_published: 'Veröffentlichte Standorte',
         users_published: 'Veröffentlichte Benutzer', yes: 'Ja', no: 'Nein', ok: 'OK', attention: 'Achtung',
+        online: 'Online', offline: 'Offline', publish_late: 'Veröffentlichung überfällig',
         editor: { mode: 'Modus', device: 'Gerät', title: 'Titel', title_ph: 'Optionaler Titel', icon: 'Symbol',
                   mode_sky: 'Himmel jetzt (ein Standort)', mode_tonight: 'Heute Nacht (ein Standort)', mode_activity: 'Aktivität (ein Benutzer)',
                   mode_diagnostic: 'Diagnose (das Board)',
@@ -395,6 +399,7 @@ const TRANSLATIONS = {
         running: 'Calcolo in corso', idle: 'Inattivo', last_run: 'Ultimo calcolo', next_run: 'Prossimo calcolo',
         last_publish: 'Ultima pubblicazione', publication: 'Pubblicazione', locations_published: 'Località pubblicate',
         users_published: 'Utenti pubblicati', yes: 'Sì', no: 'No', ok: 'OK', attention: 'Attenzione',
+        online: 'Online', offline: 'Offline', publish_late: 'Pubblicazione in ritardo',
         editor: { mode: 'Modalità', device: 'Dispositivo', title: 'Titolo', title_ph: 'Titolo opzionale', icon: 'Icona',
                   mode_sky: 'Cielo ora (una località)', mode_tonight: 'Stanotte (una località)', mode_activity: 'Attività (un utente)',
                   mode_diagnostic: 'Diagnostica (la scheda)',
@@ -453,6 +458,7 @@ const TRANSLATIONS = {
         running: 'A calcular', idle: 'Inativo', last_run: 'Último cálculo', next_run: 'Próximo cálculo',
         last_publish: 'Última publicação', publication: 'Publicação', locations_published: 'Locais publicados',
         users_published: 'Utilizadores publicados', yes: 'Sim', no: 'Não', ok: 'OK', attention: 'Atenção',
+        online: 'Online', offline: 'Offline', publish_late: 'Publicação atrasada',
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Ícone',
                   mode_sky: 'Céu agora (um local)', mode_tonight: 'Esta noite (um local)', mode_activity: 'Atividade (um utilizador)',
                   mode_diagnostic: 'Diagnóstico (o painel)',
@@ -510,6 +516,11 @@ const STYLES = `
     .hero { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
     .hero .big { font-size: 2.4em; font-weight: 300; line-height: 1; color: var(--primary-text-color); cursor: pointer; }
     .hero .big.error { color: var(--error-color, #db4437); }
+    .hero .big.status { display: inline-flex; align-items: center; gap: 10px; }
+    .hero .big.ok { color: var(--success-color, #4caf50); }
+    .hero .dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; position: relative; flex: none; }
+    .hero .dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: currentColor; opacity: 0.35; animation: mab-pulse 1.8s ease-out infinite; }
+    @keyframes mab-pulse { 0% { transform: scale(0.6); opacity: 0.45; } 100% { transform: scale(2.2); opacity: 0; } }
     .hero .unit { font-size: 0.45em; color: var(--secondary-text-color); margin-left: 2px; }
     .hero .right { flex: 1; }
     .hero .sub { color: var(--secondary-text-color); font-size: 0.9em; margin-top: 6px; }
@@ -744,7 +755,10 @@ class MyAstroBoardCard extends HTMLElement {
         if (abs < 60) span = `${abs} min`;
         else if (abs < 48 * 60) span = `${Math.floor(abs / 60)} h ${abs % 60 ? (abs % 60) + ' min' : ''}`.trim();
         else span = `${Math.round(abs / 1440)} d`;
-        return diffMin >= 0 ? `${this._t('in')} ${span}` : `${this._t('ago')} ${span}`;
+        // diffMin > 0, not >= 0: Math.round() of a small negative difference (an event a few
+        // seconds in the past) can yield -0, and -0 >= 0 is true in JS - which used to show
+        // "in 0 min" for something that already happened.
+        return diffMin > 0 ? `${this._t('in')} ${span}` : `${this._t('ago')} ${span}`;
     }
 
     _period(key) {
@@ -873,6 +887,18 @@ class MyAstroBoardCard extends HTMLElement {
         const updateState = this._state('update');
         if (updateState && updateState.state === 'on') return { level: 'info', label: t('update_available') };
         return { level: 'ok', label: t('ok') };
+    }
+
+    // The hero's headline is a pure connectivity read on the heartbeat alone (never published /
+    // stale vs fresh), kept separate from _diagnosticHealth()'s badge (which also folds in caches
+    // readiness and update availability) - so "online but caches not ready" can show both signals
+    // instead of collapsing them into one.
+    _diagnosticHeartbeat() {
+        const t = this._t;
+        const staleMin = this._diagnosticStaleMinutes();
+        if (staleMin === null) return { level: 'error', label: t('offline') };
+        if (staleMin >= DIAGNOSTIC_STALE_MINUTES) return { level: 'error', label: t('publish_late') };
+        return { level: 'ok', label: t('online') };
     }
 
     _header() {
@@ -1124,10 +1150,12 @@ class MyAstroBoardCard extends HTMLElement {
 
     _renderDiagnostic(card) {
         const t = this._t;
-        const health = this._diagnosticHealth();
+        const heartbeat = this._diagnosticHeartbeat();
 
         const hero = el('div', 'hero');
-        const big = el('div', `big${health.level === 'error' ? ' error' : ''}`, this._fmtRelative('lastPublish') || '-');
+        const big = el('div', `big status ${heartbeat.level === 'error' ? 'error' : 'ok'}`);
+        big.appendChild(el('span', 'dot'));
+        big.appendChild(document.createTextNode(heartbeat.label));
         big.addEventListener('click', () => this._moreInfo('lastPublish'));
         hero.appendChild(big);
         const right = el('div', 'right');
@@ -1136,12 +1164,12 @@ class MyAstroBoardCard extends HTMLElement {
         const staleMin = this._diagnosticStaleMinutes();
         const freshness = staleMin === null ? 0 : Math.max(0, Math.min(100, 100 - (staleMin / DIAGNOSTIC_STALE_MINUTES) * 100));
         fill.style.width = `${freshness}%`;
-        if (health.level === 'error') fill.classList.add('error');
+        if (heartbeat.level === 'error') fill.classList.add('error');
         gauge.appendChild(fill);
         right.appendChild(gauge);
         const sub = el('div', 'sub');
         sub.appendChild(document.createTextNode(`${t('last_publish')} - `));
-        sub.appendChild(el('strong', null, health.label));
+        sub.appendChild(el('strong', null, this._fmtRelative('lastPublish') || '-'));
         right.appendChild(sub);
         hero.appendChild(right);
         card.appendChild(hero);

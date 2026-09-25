@@ -14,6 +14,25 @@
 
 - None.
 
+## 0.2.1 (2026-09-25)
+
+### Features
+
+- None.
+
+### Fixes
+
+- `diagnostic` mode: the hero's headline showed a raw "X min ago" reading that was almost always
+  "0 min" (the heartbeat publishes about every minute when healthy), which was hard to parse at a
+  glance, and the subtitle duplicated the header badge's label (e.g. "Update available") instead
+  of showing the heartbeat's actual timing. The headline is now a plain connectivity read
+  ("Online" / "Offline" / "Publish overdue", with a status dot) based on the heartbeat alone, and
+  the subtitle shows the precise relative time instead.
+
+### Breaking changes
+
+- None.
+
 ## 0.2.0 (2026-09-25)
 
 ### Features
@@ -27,7 +46,10 @@
 
 ### Fixes
 
-- None.
+- The relative-time helper used across every mode ("in X min" / "X min ago") could show "in 0
+  min" for something that had just happened, instead of "0 min ago" - a `Math.round()` of a
+  small negative difference can yield `-0`, and `-0 >= 0` is `true` in JavaScript. Most visible
+  on the new `diagnostic` mode's publish heartbeat, which is often only seconds old.
 
 ### Breaking changes
 
