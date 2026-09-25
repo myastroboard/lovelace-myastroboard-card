@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-const CARD_VERSION = '0.1.3';
+const CARD_VERSION = '0.1.4';
 const CARD_TYPE = 'myastroboard-card';
 const MANUFACTURER = 'MyAstroBoard';
 const MODEL_BY_MODE = { sky: 'Location', tonight: 'Location', activity: 'User' };
@@ -114,6 +114,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Waxing gibbous', 'Full Moon': 'Full Moon', 'Waning Gibbous': 'Waning gibbous',
                       'Last Quarter': 'Last quarter', 'Waning Crescent': 'Waning crescent' },
         dew: { LOW: 'Low', MODERATE: 'Moderate', HIGH: 'High', CRITICAL: 'Critical', UNKNOWN: 'Unknown' },
+        moon_condition: { strict: 'Strict', practical: 'Practical', illumination: 'Illumination', unfavorable: 'Unfavorable' },
         plan_state: { none: 'none', current: 'current', previous: 'previous' },
         editor: { mode: 'Mode', device: 'Device', title: 'Title', title_ph: 'Optional title', icon: 'Icon',
                   mode_sky: 'Sky now (a location)', mode_tonight: 'Tonight (a location)', mode_activity: 'Activity (a user)',
@@ -146,6 +147,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Gibbeuse croissante', 'Full Moon': 'Pleine Lune', 'Waning Gibbous': 'Gibbeuse décroissante',
                       'Last Quarter': 'Dernier quartier', 'Waning Crescent': 'Dernier croissant' },
         dew: { LOW: 'Faible', MODERATE: 'Modéré', HIGH: 'Élevé', CRITICAL: 'Critique', UNKNOWN: 'Inconnu' },
+        moon_condition: { strict: 'Stricte', practical: 'Pratique', illumination: 'Illumination', unfavorable: 'Défavorable' },
         plan_state: { none: 'aucun', current: 'en cours', previous: 'passé' },
         editor: { mode: 'Mode', device: 'Appareil', title: 'Titre', title_ph: 'Titre optionnel', icon: 'Icône',
                   mode_sky: 'Ciel actuel (un lieu)', mode_tonight: 'Cette nuit (un lieu)', mode_activity: 'Activité (un utilisateur)',
@@ -178,6 +180,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Gibosa creciente', 'Full Moon': 'Luna llena', 'Waning Gibbous': 'Gibosa menguante',
                       'Last Quarter': 'Cuarto menguante', 'Waning Crescent': 'Luna menguante' },
         dew: { LOW: 'Bajo', MODERATE: 'Moderado', HIGH: 'Alto', CRITICAL: 'Crítico', UNKNOWN: 'Desconocido' },
+        moon_condition: { strict: 'Estricto', practical: 'Práctico', illumination: 'Iluminación', unfavorable: 'Desfavorable' },
         plan_state: { none: 'ninguno', current: 'en curso', previous: 'anterior' },
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Icono',
                   mode_sky: 'Cielo ahora (una ubicación)', mode_tonight: 'Esta noche (una ubicación)', mode_activity: 'Actividad (un usuario)',
@@ -210,6 +213,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Zunehmender Mond', 'Full Moon': 'Vollmond', 'Waning Gibbous': 'Abnehmender Mond',
                       'Last Quarter': 'Letztes Viertel', 'Waning Crescent': 'Abnehmende Sichel' },
         dew: { LOW: 'Gering', MODERATE: 'Mäßig', HIGH: 'Hoch', CRITICAL: 'Kritisch', UNKNOWN: 'Unbekannt' },
+        moon_condition: { strict: 'Strikt', practical: 'Praktisch', illumination: 'Beleuchtung', unfavorable: 'Ungünstig' },
         plan_state: { none: 'keiner', current: 'aktuell', previous: 'vergangen' },
         editor: { mode: 'Modus', device: 'Gerät', title: 'Titel', title_ph: 'Optionaler Titel', icon: 'Symbol',
                   mode_sky: 'Himmel jetzt (ein Standort)', mode_tonight: 'Heute Nacht (ein Standort)', mode_activity: 'Aktivität (ein Benutzer)',
@@ -242,6 +246,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Gibbosa crescente', 'Full Moon': 'Luna piena', 'Waning Gibbous': 'Gibbosa calante',
                       'Last Quarter': 'Ultimo quarto', 'Waning Crescent': 'Luna calante' },
         dew: { LOW: 'Basso', MODERATE: 'Moderato', HIGH: 'Alto', CRITICAL: 'Critico', UNKNOWN: 'Sconosciuto' },
+        moon_condition: { strict: 'Rigoroso', practical: 'Pratico', illumination: 'Illuminazione', unfavorable: 'Sfavorevole' },
         plan_state: { none: 'nessuno', current: 'in corso', previous: 'precedente' },
         editor: { mode: 'Modalità', device: 'Dispositivo', title: 'Titolo', title_ph: 'Titolo opzionale', icon: 'Icona',
                   mode_sky: 'Cielo ora (una località)', mode_tonight: 'Stanotte (una località)', mode_activity: 'Attività (un utente)',
@@ -274,6 +279,7 @@ const TRANSLATIONS = {
                       'Waxing Gibbous': 'Gibosa crescente', 'Full Moon': 'Lua cheia', 'Waning Gibbous': 'Gibosa minguante',
                       'Last Quarter': 'Quarto minguante', 'Waning Crescent': 'Lua minguante' },
         dew: { LOW: 'Baixo', MODERATE: 'Moderado', HIGH: 'Alto', CRITICAL: 'Crítico', UNKNOWN: 'Desconhecido' },
+        moon_condition: { strict: 'Estrito', practical: 'Prático', illumination: 'Iluminação', unfavorable: 'Desfavorável' },
         plan_state: { none: 'nenhum', current: 'em curso', previous: 'anterior' },
         editor: { mode: 'Modo', device: 'Dispositivo', title: 'Título', title_ph: 'Título opcional', icon: 'Ícone',
                   mode_sky: 'Céu agora (um local)', mode_tonight: 'Esta noite (um local)', mode_activity: 'Atividade (um utilizador)',
@@ -729,7 +735,11 @@ class MyAstroBoardCard extends HTMLElement {
             const dur = num(this._state('bestDuration'), 1);
             if (dur !== null) sub.appendChild(document.createTextNode(` (${dur} ${t('hours_short')})`));
             const moon = this._text('bestMoon', '');
-            if (moon) sub.appendChild(document.createTextNode(` - ${moon}`));
+            if (moon) {
+                const key = `moon_condition.${moon.toLowerCase()}`;
+                const label = t(key) === key ? moon : t(key);
+                sub.appendChild(document.createTextNode(` - ${label}`));
+            }
         }));
 
         const grid = el('div', 'grid');

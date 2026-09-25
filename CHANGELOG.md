@@ -14,6 +14,22 @@
 
 - None.
 
+## 0.1.4 (2026-09-25)
+
+### Features
+
+- None.
+
+### Fixes
+
+- `tonight` mode: the best-window moon condition (shown next to the hero score, e.g.
+  "unfavorable") was displayed as the raw untranslated sensor state instead of going through the
+  card's translation table like the other enum values (moon phase, dew risk, period).
+
+### Breaking changes
+
+- None.
+
 ## 0.1.3 (2026-09-25)
 
 ### Features
