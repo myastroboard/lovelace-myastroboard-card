@@ -1,0 +1,36 @@
+name: Feature request
+description: Suggest an idea for the card
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: What would you like to happen
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Related mode (if any)
+      options:
+        - sky
+        - tonight
+        - activity
+        - diagnostic
+        - New mode
+        - Not applicable
+    validations:
+      required: false
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else

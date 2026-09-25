@@ -1,0 +1,73 @@
+name: Bug report
+description: Something in the card is broken or behaves unexpectedly
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: What did you expect instead?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Card mode
+      options:
+        - sky
+        - tonight
+        - activity
+        - diagnostic
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: card-version
+    attributes:
+      label: Card version
+      description: Shown in the browser console as "MYASTROBOARD-CARD vX.Y.Z", or in HACS
+      placeholder: "0.2.1"
+    validations:
+      required: true
+
+  - type: input
+    id: ha-version
+    attributes:
+      label: Home Assistant version
+      description: Settings -> About
+      placeholder: "2024.11.0"
+    validations:
+      required: true
+
+  - type: input
+    id: myastroboard-version
+    attributes:
+      label: MyAstroBoard version
+      description: Visible on the diagnostic tile, if installed
+      placeholder: "1.6.0"
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / app
+      placeholder: "Chrome 128 on Windows, HA Companion app on iOS 17, ..."
+
+  - type: textarea
+    id: card-config
+    attributes:
+      label: Card configuration (YAML)
+      render: yaml
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console errors
+      description: F12 -> Console. Leave empty if there is nothing relevant.
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
