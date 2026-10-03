@@ -29,6 +29,8 @@ jobs:
           node-version: "20"
       - name: Parse the card as a script
         run: node -e "new Function(require('fs').readFileSync('dist/myastroboard-card.js','utf8')); console.log('syntax ok')"
+      - name: Translation parity and ASCII punctuation
+        run: node scripts/validate-i18n.js
       - name: hacs.json points at the shipped file
         run: |
           test "$(node -p "require('./hacs.json').filename")" = "myastroboard-card.js"

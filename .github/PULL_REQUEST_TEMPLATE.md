@@ -10,5 +10,6 @@ Fixes #
 
 ## Checklist
 
-- [ ] `CHANGELOG.md` updated under `## Unreleased`
-- [ ] Tested in a real Home Assistant dashboard
+- [ ] `CHANGELOG.md` updated under `## [Unreleased]` (required for `feature/` and `fix/` branches)
+- [ ] Tested in a real Home Assistant dashboard (touched modes, visual editor, light and dark theme)
+- [ ] Every language in `TRANSLATIONS` has the new or changed keys

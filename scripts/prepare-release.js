@@ -45,10 +45,11 @@ if (!version || !/^\d+\.\d+\.\d+$/.test(version)) {
 
 const changelog = fs.readFileSync(CHANGELOG_PATH, 'utf8');
 
-const unreleasedRe = /^## Unreleased\n\n/m;
+// Organization format is "## [Unreleased]"; the bare "## Unreleased" is still accepted.
+const unreleasedRe = /^## \[?Unreleased\]?\n\n/m;
 const unreleasedMatch = unreleasedRe.exec(changelog);
 if (!unreleasedMatch) {
-  fail('could not find a "## Unreleased" section in CHANGELOG.md');
+  fail('could not find a "## [Unreleased]" section in CHANGELOG.md');
 }
 const bodyStart = unreleasedMatch.index + unreleasedMatch[0].length;
 

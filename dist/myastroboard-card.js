@@ -553,6 +553,15 @@ const STYLES = `
     .muted { color: var(--secondary-text-color); }
 `;
 
+const EDITOR_STYLES = `
+    .editor { padding: 4px 0; }
+    .field { display: block; margin: 8px 0; }
+    .field-label { font-size: 0.85em; color: var(--secondary-text-color); }
+    .field-input { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid var(--divider-color); border-radius: 6px; background: var(--card-background-color); color: var(--primary-text-color); }
+    .field-help { font-size: 0.75em; color: var(--secondary-text-color); margin-top: 2px; }
+    .editor-note { color: var(--warning-color, #ffa600); font-size: 0.85em; margin: 8px 0; }
+`;
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -1227,28 +1236,11 @@ class MyAstroBoardCardEditor extends HTMLElement {
     }
 
     _field(label, input, help) {
-        const wrap = el('label');
-        wrap.style.display = 'block';
-        wrap.style.margin = '8px 0';
-        const lbl = el('div', null, label);
-        lbl.style.fontSize = '0.85em';
-        lbl.style.color = 'var(--secondary-text-color)';
-        wrap.appendChild(lbl);
-        input.style.width = '100%';
-        input.style.boxSizing = 'border-box';
-        input.style.padding = '8px';
-        input.style.border = '1px solid var(--divider-color)';
-        input.style.borderRadius = '6px';
-        input.style.background = 'var(--card-background-color)';
-        input.style.color = 'var(--primary-text-color)';
+        const wrap = el('label', 'field');
+        wrap.appendChild(el('div', 'field-label', label));
+        input.classList.add('field-input');
         wrap.appendChild(input);
-        if (help) {
-            const h = el('div', null, help);
-            h.style.fontSize = '0.75em';
-            h.style.color = 'var(--secondary-text-color)';
-            h.style.marginTop = '2px';
-            wrap.appendChild(h);
-        }
+        if (help) wrap.appendChild(el('div', 'field-help', help));
         return wrap;
     }
 
@@ -1256,8 +1248,10 @@ class MyAstroBoardCardEditor extends HTMLElement {
         const t = translator(this._hass);
         const root = this.shadowRoot;
         while (root.firstChild) root.removeChild(root.firstChild);
-        const box = el('div');
-        box.style.padding = '4px 0';
+        const style = el('style');
+        style.textContent = EDITOR_STYLES;
+        root.appendChild(style);
+        const box = el('div', 'editor');
 
         const mode = this._config.mode || 'sky';
         const modeSelect = document.createElement('select');
@@ -1307,10 +1301,7 @@ class MyAstroBoardCardEditor extends HTMLElement {
             });
             box.appendChild(this._field(t('editor.device'), deviceSelect, t('editor.device_help')));
         } else {
-            const note = el('div', null, t('editor.no_devices', { model: t(MODEL_LABEL_KEY[model] || 'editor.model_location') }));
-            note.style.color = 'var(--warning-color, #ffa600)';
-            note.style.fontSize = '0.85em';
-            note.style.margin = '8px 0';
+            const note = el('div', 'editor-note', t('editor.no_devices', { model: t(MODEL_LABEL_KEY[model] || 'editor.model_location') }));
             box.appendChild(note);
             const prefix = document.createElement('input');
             prefix.type = 'text';
