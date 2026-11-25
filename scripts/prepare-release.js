@@ -43,7 +43,10 @@ if (!version || !/^\d+\.\d+\.\d+$/.test(version)) {
   fail('usage: node scripts/prepare-release.js <X.Y.Z> [--dry-run]');
 }
 
-const changelog = fs.readFileSync(CHANGELOG_PATH, 'utf8');
+// A Windows checkout (core.autocrlf) has CRLF line endings: parse as LF, write back as found.
+const rawChangelog = fs.readFileSync(CHANGELOG_PATH, 'utf8');
+const changelogEol = rawChangelog.includes('\r\n') ? '\r\n' : '\n';
+const changelog = rawChangelog.replace(/\r\n/g, '\n');
 
 // Organization format is "## [Unreleased]"; the bare "## Unreleased" is still accepted.
 const unreleasedRe = /^## \[?Unreleased\]?\n\n/m;
@@ -94,7 +97,7 @@ if (dryRun) {
   process.exit(0);
 }
 
-fs.writeFileSync(CHANGELOG_PATH, newChangelog);
+fs.writeFileSync(CHANGELOG_PATH, newChangelog.replace(/\n/g, changelogEol));
 fs.writeFileSync(CARD_PATH, newCard);
 
 console.log(`Bumped CARD_VERSION ${oldVersion} -> ${version}`);
