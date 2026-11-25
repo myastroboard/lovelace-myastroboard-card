@@ -4,6 +4,20 @@
 
 ### Features
 
+- None.
+
+### Fixes
+
+- None.
+
+### Breaking changes
+
+- None.
+
+## 0.3.0 (2026-11-25)
+
+### Features
+
 - `tonight` mode, "Coming up": named Full Moons ("Beaver Supermoon", micromoon, Blue Moon) are
   titled in the dashboard's language. Needs the `folk_name` / `supermoon` / `micromoon` /
   `blue_moon` attributes of the next MyAstroBoard release; older boards keep the English title.
