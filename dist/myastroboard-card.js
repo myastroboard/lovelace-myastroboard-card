@@ -130,7 +130,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Plan in progress', plan: 'Plan', latest_picture: 'Latest Astrodex picture',
         waiting: 'Waiting for Home Assistant...',
         no_entities: 'No MyAstroBoard entities found. Pick a device in the card editor, or check the entity prefix and that the MQTT connector module is enabled.',
-        in: 'in', ago: 'ago',
+        in: 'in', ago: 'ago', day_short: 'd',
         period: { day: 'Day', civil_twilight: 'Civil twilight', nautical_twilight: 'Nautical twilight',
                   astronomical_twilight: 'Astronomical twilight', astronomical_night: 'Astronomical night', unknown: 'Unknown' },
         moon_phase: { 'New Moon': 'New Moon', 'Waxing Crescent': 'Waxing crescent', 'First Quarter': 'First quarter',
@@ -156,7 +156,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Mercury', 'Venus': 'Venus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturn', 'Uranus': 'Uranus', 'Neptune': 'Neptune', 'Pluto': 'Pluto' },
         eclipse_type: { 'Total': 'Total', 'Partial': 'Partial', 'Annular': 'Annular', 'Penumbral': 'Penumbral' },
         event_title: { 'Aurora Borealis': 'Aurora Borealis', 'ISS Solar Transit': 'ISS Solar Transit', 'ISS Lunar Transit': 'ISS Lunar Transit', 'CSS Solar Transit': 'CSS Solar Transit', 'CSS Lunar Transit': 'CSS Lunar Transit' },
-        event_templates: { solar_eclipse: '{eclipse_type} Solar Eclipse', lunar_eclipse: '{eclipse_type} Lunar Eclipse', conjunction: '{planet1} - {planet2} Conjunction', opposition: '{planet} at Opposition', elongation: '{planet} at Maximum Elongation', retrograde: '{planet} Retrograde Motion', moon_conjunction: 'Moon - {planet} Conjunction' },
+        event_templates: { solar_eclipse: '{eclipse_type} Solar Eclipse', lunar_eclipse: '{eclipse_type} Lunar Eclipse', conjunction: '{planet1} - {planet2} Conjunction', opposition: '{planet} at Opposition', elongation: '{planet} at Maximum Elongation', retrograde: '{planet} Retrograde Motion', moon_conjunction: 'Moon - {planet} Conjunction', comet: '{comet_name} at Peak Brightness', meteor_shower: '{shower_name} Peak', full_moon_named: '{name} Moon', supermoon_named: '{name} Supermoon', micromoon_named: '{name} Micromoon' },
+        folk_name: { wolf: 'Wolf', snow: 'Snow', worm: 'Worm', pink: 'Pink', flower: 'Flower', strawberry: 'Strawberry', buck: 'Buck', sturgeon: 'Sturgeon', corn: 'Corn', harvest: 'Harvest', hunters: "Hunter's", beaver: 'Beaver', cold: 'Cold' },
+        blue_moon: 'Blue Moon',
         plan_state: { none: 'none', current: 'current', previous: 'previous' },
         diagnostic: 'Diagnostic', version: 'Version', update: 'Update', up_to_date: 'Up to date',
         update_available: 'Update available', caches_ready: 'Caches ready', skytonight: 'SkyTonight',
@@ -189,7 +191,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Plan en cours', plan: 'Plan', latest_picture: 'Dernière photo Astrodex',
         waiting: 'En attente de Home Assistant...',
         no_entities: "Aucune entité MyAstroBoard trouvée. Choisissez un appareil dans l'éditeur de carte, ou vérifiez le préfixe d'entité et que le module du connecteur MQTT est activé.",
-        in: 'dans', ago: 'il y a',
+        in: 'dans', ago: 'il y a', day_short: 'j',
         period: { day: 'Jour', civil_twilight: 'Crépuscule civil', nautical_twilight: 'Crépuscule nautique',
                   astronomical_twilight: 'Crépuscule astronomique', astronomical_night: 'Nuit astronomique', unknown: 'Inconnu' },
         moon_phase: { 'New Moon': 'Nouvelle Lune', 'Waxing Crescent': 'Premier croissant', 'First Quarter': 'Premier quartier',
@@ -215,7 +217,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Mercure', 'Venus': 'Vénus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturne', 'Uranus': 'Uranus', 'Neptune': 'Neptune', 'Pluto': 'Pluton' },
         eclipse_type: { 'Total': 'Totale', 'Partial': 'Partielle', 'Annular': 'Annulaire', 'Penumbral': 'Pénombrale' },
         event_title: { 'Aurora Borealis': 'Aurore Boréale', 'ISS Solar Transit': "Transit solaire de l'ISS", 'ISS Lunar Transit': "Transit lunaire de l'ISS", 'CSS Solar Transit': 'Transit solaire CSS', 'CSS Lunar Transit': 'Transit lunaire CSS' },
-        event_templates: { solar_eclipse: 'Éclipse Solaire {eclipse_type}', lunar_eclipse: 'Éclipse Lunaire {eclipse_type}', conjunction: 'Conjonction {planet1} - {planet2}', opposition: '{planet} en opposition', elongation: "{planet} à l'élongation maximale", retrograde: 'Mouvement rétrograde de {planet}', moon_conjunction: 'Lune - {planet} Conjonction' },
+        event_templates: { solar_eclipse: 'Éclipse Solaire {eclipse_type}', lunar_eclipse: 'Éclipse Lunaire {eclipse_type}', conjunction: 'Conjonction {planet1} - {planet2}', opposition: '{planet} en opposition', elongation: "{planet} à l'élongation maximale", retrograde: 'Mouvement rétrograde de {planet}', moon_conjunction: 'Lune - {planet} Conjonction', comet: '{comet_name} au pic de luminosité', meteor_shower: 'Pic des {shower_name}', full_moon_named: 'Pleine lune {name}', supermoon_named: 'Super lune {name}', micromoon_named: 'Micro lune {name}' },
+        folk_name: { wolf: 'du Loup', snow: 'des Neiges', worm: 'du Ver', pink: 'Rose', flower: 'des Fleurs', strawberry: 'des Fraises', buck: 'du Cerf', sturgeon: "de l'Esturgeon", corn: 'du Maïs', harvest: 'des Moissons', hunters: 'du Chasseur', beaver: 'du Castor', cold: 'Froide' },
+        blue_moon: 'Lune bleue',
         plan_state: { none: 'aucun', current: 'en cours', previous: 'passé' },
         diagnostic: 'Diagnostic', version: 'Version', update: 'Mise à jour', up_to_date: 'À jour',
         update_available: 'Mise à jour disponible', caches_ready: 'Caches prêts', skytonight: 'SkyTonight',
@@ -248,7 +252,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Plan en curso', plan: 'Plan', latest_picture: 'Última foto de Astrodex',
         waiting: 'Esperando a Home Assistant...',
         no_entities: 'No se encontraron entidades MyAstroBoard. Elige un dispositivo en el editor de la tarjeta, o comprueba el prefijo de entidad y que el módulo del conector MQTT esté activado.',
-        in: 'en', ago: 'hace',
+        in: 'en', ago: 'hace', day_short: 'd',
         period: { day: 'Día', civil_twilight: 'Crepúsculo civil', nautical_twilight: 'Crepúsculo náutico',
                   astronomical_twilight: 'Crepúsculo astronómico', astronomical_night: 'Noche astronómica', unknown: 'Desconocido' },
         moon_phase: { 'New Moon': 'Luna nueva', 'Waxing Crescent': 'Luna creciente', 'First Quarter': 'Cuarto creciente',
@@ -274,7 +278,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Mercurio', 'Venus': 'Venus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Neptuno', 'Pluto': 'Plutón' },
         eclipse_type: { 'Total': 'Total', 'Partial': 'Parcial', 'Annular': 'Anular', 'Penumbral': 'Penumbral' },
         event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Tránsito solar de la ISS', 'ISS Lunar Transit': 'Tránsito lunar de la ISS', 'CSS Solar Transit': 'Tránsito solar CSS', 'CSS Lunar Transit': 'Tránsito lunar CSS' },
-        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunción', opposition: '{planet} en oposición', elongation: '{planet} a máxima elongación', retrograde: '{planet} Movimiento retrógrado', moon_conjunction: 'Luna - {planet} Conjunción' },
+        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunción', opposition: '{planet} en oposición', elongation: '{planet} a máxima elongación', retrograde: '{planet} Movimiento retrógrado', moon_conjunction: 'Luna - {planet} Conjunción', comet: '{comet_name} en su pico de brillo', meteor_shower: 'Pico de las {shower_name}', full_moon_named: 'Luna llena {name}', supermoon_named: 'Superluna {name}', micromoon_named: 'Microluna {name}' },
+        folk_name: { wolf: 'del Lobo', snow: 'de Nieve', worm: 'del Gusano', pink: 'Rosa', flower: 'de las Flores', strawberry: 'de las Fresas', buck: 'del Ciervo', sturgeon: 'del Esturión', corn: 'del Maíz', harvest: 'de la Cosecha', hunters: 'del Cazador', beaver: 'del Castor', cold: 'Fría' },
+        blue_moon: 'Luna azul',
         plan_state: { none: 'ninguno', current: 'en curso', previous: 'anterior' },
         diagnostic: 'Diagnóstico', version: 'Versión', update: 'Actualización', up_to_date: 'Actualizado',
         update_available: 'Actualización disponible', caches_ready: 'Cachés listos', skytonight: 'SkyTonight',
@@ -307,7 +313,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Plan läuft', plan: 'Plan', latest_picture: 'Neuestes Astrodex-Foto',
         waiting: 'Warte auf Home Assistant...',
         no_entities: 'Keine MyAstroBoard-Entitäten gefunden. Wähle im Karteneditor ein Gerät, oder prüfe das Entitätspräfix und ob das Modul des MQTT-Connectors aktiviert ist.',
-        in: 'in', ago: 'vor',
+        in: 'in', ago: 'vor', day_short: 'T.',
         period: { day: 'Tag', civil_twilight: 'Bürgerliche Dämmerung', nautical_twilight: 'Nautische Dämmerung',
                   astronomical_twilight: 'Astronomische Dämmerung', astronomical_night: 'Astronomische Nacht', unknown: 'Unbekannt' },
         moon_phase: { 'New Moon': 'Neumond', 'Waxing Crescent': 'Zunehmende Sichel', 'First Quarter': 'Erstes Viertel',
@@ -333,7 +339,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Merkur', 'Venus': 'Venus', 'Mars': 'Mars', 'Jupiter': 'Jupiter', 'Saturn': 'Saturn', 'Uranus': 'Uranus', 'Neptune': 'Neptun', 'Pluto': 'Pluto' },
         eclipse_type: { 'Total': 'Totale', 'Partial': 'Partielle', 'Annular': 'Ringförmig', 'Penumbral': 'Halbschatten' },
         event_title: { 'Aurora Borealis': 'Nordlicht', 'ISS Solar Transit': 'ISS-Sonnentransit', 'ISS Lunar Transit': 'ISS-Mondtransit', 'CSS Solar Transit': 'CSS-Sonnentransit', 'CSS Lunar Transit': 'CSS-Mondtransit' },
-        event_templates: { solar_eclipse: '{eclipse_type} Sonnenfinsternis', lunar_eclipse: '{eclipse_type} Mondfinsternis', conjunction: '{planet1} - {planet2} Konjunktion', opposition: '{planet} bei Opposition', elongation: '{planet} bei maximaler Dehnung', retrograde: '{planet} Rückläufige Bewegung', moon_conjunction: 'Mond - {planet} Konjunktion' },
+        event_templates: { solar_eclipse: '{eclipse_type} Sonnenfinsternis', lunar_eclipse: '{eclipse_type} Mondfinsternis', conjunction: '{planet1} - {planet2} Konjunktion', opposition: '{planet} bei Opposition', elongation: '{planet} bei maximaler Dehnung', retrograde: '{planet} Rückläufige Bewegung', moon_conjunction: 'Mond - {planet} Konjunktion', comet: '{comet_name} bei maximaler Helligkeit', meteor_shower: 'Maximum der {shower_name}', full_moon_named: '{name}', supermoon_named: 'Supermond ({name})', micromoon_named: 'Minimond ({name})' },
+        folk_name: { wolf: 'Wolfsmond', snow: 'Schneemond', worm: 'Wurmmond', pink: 'Rosa Mond', flower: 'Blumenmond', strawberry: 'Erdbeermond', buck: 'Hirschmond', sturgeon: 'Störmond', corn: 'Maismond', harvest: 'Erntemond', hunters: 'Jägermond', beaver: 'Bibermond', cold: 'Kalter Mond' },
+        blue_moon: 'Blue Moon',
         plan_state: { none: 'keiner', current: 'aktuell', previous: 'vergangen' },
         diagnostic: 'Diagnose', version: 'Version', update: 'Update', up_to_date: 'Aktuell',
         update_available: 'Update verfügbar', caches_ready: 'Caches bereit', skytonight: 'SkyTonight',
@@ -366,7 +374,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Piano in corso', plan: 'Piano', latest_picture: 'Ultima foto Astrodex',
         waiting: 'In attesa di Home Assistant...',
         no_entities: "Nessuna entità MyAstroBoard trovata. Scegli un dispositivo nell'editor della scheda, oppure controlla il prefisso delle entità e che il modulo del connettore MQTT sia attivo.",
-        in: 'tra', ago: 'fa',
+        in: 'tra', ago: 'fa', day_short: 'g',
         period: { day: 'Giorno', civil_twilight: 'Crepuscolo civile', nautical_twilight: 'Crepuscolo nautico',
                   astronomical_twilight: 'Crepuscolo astronomico', astronomical_night: 'Notte astronomica', unknown: 'Sconosciuto' },
         moon_phase: { 'New Moon': 'Luna nuova', 'Waxing Crescent': 'Luna crescente', 'First Quarter': 'Primo quarto',
@@ -392,7 +400,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Mercurio', 'Venus': 'Venere', 'Mars': 'Marte', 'Jupiter': 'Giove', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Nettuno', 'Pluto': 'Plutone' },
         eclipse_type: { 'Total': 'Totale', 'Partial': 'Parziale', 'Annular': 'Anulare', 'Penumbral': 'Penombra' },
         event_title: { 'Aurora Borealis': 'Aurora boreale', 'ISS Solar Transit': 'Transito solare della ISS', 'ISS Lunar Transit': 'Transito lunare della ISS', 'CSS Solar Transit': 'Transito solare CSS', 'CSS Lunar Transit': 'Transito lunare CSS' },
-        event_templates: { solar_eclipse: 'Eclissi Solare {eclipse_type}', lunar_eclipse: 'Eclissi Lunare {eclipse_type}', conjunction: '{planet1} - {planet2} Congiunzione', opposition: "{planet} all'opposizione", elongation: '{planet} al massimo allungamento', retrograde: '{planet} Moto retrogrado', moon_conjunction: 'Luna - {planet} Congiunzione' },
+        event_templates: { solar_eclipse: 'Eclissi Solare {eclipse_type}', lunar_eclipse: 'Eclissi Lunare {eclipse_type}', conjunction: '{planet1} - {planet2} Congiunzione', opposition: "{planet} all'opposizione", elongation: '{planet} al massimo allungamento', retrograde: '{planet} Moto retrogrado', moon_conjunction: 'Luna - {planet} Congiunzione', comet: '{comet_name} al picco di luminosità', meteor_shower: 'Picco delle {shower_name}', full_moon_named: 'Luna piena {name}', supermoon_named: 'Superluna {name}', micromoon_named: 'Microluna {name}' },
+        folk_name: { wolf: 'del Lupo', snow: 'della Neve', worm: 'del Verme', pink: 'Rosa', flower: 'dei Fiori', strawberry: 'delle Fragole', buck: 'del Cervo', sturgeon: 'dello Storione', corn: 'del Mais', harvest: 'del Raccolto', hunters: 'del Cacciatore', beaver: 'del Castoro', cold: 'Fredda' },
+        blue_moon: 'Luna blu',
         plan_state: { none: 'nessuno', current: 'in corso', previous: 'precedente' },
         diagnostic: 'Diagnostica', version: 'Versione', update: 'Aggiornamento', up_to_date: 'Aggiornato',
         update_available: 'Aggiornamento disponibile', caches_ready: 'Cache pronte', skytonight: 'SkyTonight',
@@ -425,7 +435,7 @@ const TRANSLATIONS = {
         plan_in_progress: 'Plano em curso', plan: 'Plano', latest_picture: 'Última foto do Astrodex',
         waiting: 'À espera do Home Assistant...',
         no_entities: 'Nenhuma entidade MyAstroBoard encontrada. Escolha um dispositivo no editor do cartão, ou verifique o prefixo de entidade e se o módulo do conector MQTT está ativo.',
-        in: 'em', ago: 'há',
+        in: 'em', ago: 'há', day_short: 'd',
         period: { day: 'Dia', civil_twilight: 'Crepúsculo civil', nautical_twilight: 'Crepúsculo náutico',
                   astronomical_twilight: 'Crepúsculo astronómico', astronomical_night: 'Noite astronómica', unknown: 'Desconhecido' },
         moon_phase: { 'New Moon': 'Lua nova', 'Waxing Crescent': 'Lua crescente', 'First Quarter': 'Quarto crescente',
@@ -451,7 +461,9 @@ const TRANSLATIONS = {
         planet: { 'Mercury': 'Mercúrio', 'Venus': 'Vênus', 'Mars': 'Marte', 'Jupiter': 'Júpiter', 'Saturn': 'Saturno', 'Uranus': 'Urano', 'Neptune': 'Netuno', 'Pluto': 'Plutão' },
         eclipse_type: { 'Total': 'Total', 'Partial': 'Parcial', 'Annular': 'Anular', 'Penumbral': 'Penumbral' },
         event_title: { 'Aurora Borealis': 'Aurora boreal', 'ISS Solar Transit': 'Trânsito solar da ISS', 'ISS Lunar Transit': 'Trânsito lunar da ISS', 'CSS Solar Transit': 'Trânsito solar CSS', 'CSS Lunar Transit': 'Trânsito lunar CSS' },
-        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunção', opposition: '{planet} na oposição', elongation: '{planet} no alongamento máximo', retrograde: '{planet} Movimento retrógrado', moon_conjunction: 'Lua - {planet} Conjunção' },
+        event_templates: { solar_eclipse: 'Eclipse Solar {eclipse_type}', lunar_eclipse: 'Eclipse Lunar {eclipse_type}', conjunction: '{planet1} - {planet2} Conjunção', opposition: '{planet} na oposição', elongation: '{planet} no alongamento máximo', retrograde: '{planet} Movimento retrógrado', moon_conjunction: 'Lua - {planet} Conjunção', comet: '{comet_name} no pico de brilho', meteor_shower: 'Pico das {shower_name}', full_moon_named: 'Lua cheia {name}', supermoon_named: 'Superlua {name}', micromoon_named: 'Microlua {name}' },
+        folk_name: { wolf: 'do Lobo', snow: 'da Neve', worm: 'da Minhoca', pink: 'Rosa', flower: 'das Flores', strawberry: 'dos Morangos', buck: 'do Cervo', sturgeon: 'do Esturjão', corn: 'do Milho', harvest: 'da Colheita', hunters: 'do Caçador', beaver: 'do Castor', cold: 'Fria' },
+        blue_moon: 'Lua azul',
         plan_state: { none: 'nenhum', current: 'em curso', previous: 'anterior' },
         diagnostic: 'Diagnóstico', version: 'Versão', update: 'Atualização', up_to_date: 'Atualizado',
         update_available: 'Atualização disponível', caches_ready: 'Caches prontas', skytonight: 'SkyTonight',
@@ -763,7 +775,7 @@ class MyAstroBoardCard extends HTMLElement {
         let span;
         if (abs < 60) span = `${abs} min`;
         else if (abs < 48 * 60) span = `${Math.floor(abs / 60)} h ${abs % 60 ? (abs % 60) + ' min' : ''}`.trim();
-        else span = `${Math.round(abs / 1440)} d`;
+        else span = `${Math.round(abs / 1440)} ${this._t('day_short')}`;
         // diffMin > 0, not >= 0: Math.round() of a small negative difference (an event a few
         // seconds in the past) can yield -0, and -0 >= 0 is true in JS - which used to show
         // "in 0 min" for something that already happened.
@@ -780,7 +792,7 @@ class MyAstroBoardCard extends HTMLElement {
     // per-connector language setting). Where the event carries plain enum attributes alongside
     // that prose (event_type, eclipse_type, planet/planet2), rebuild the title client-side from
     // those using this dashboard's own language, the same way moon_phase/object_type already do.
-    // Anything not covered here (meteor showers, comets, equinox/solstice, ...) falls back to the
+    // Anything not covered here (equinox/solstice, zodiacal light, ...) falls back to the
     // raw English title, which is still a legible fallback, not broken text.
     _nextEventTitle() {
         const t = this._t;
@@ -816,6 +828,24 @@ class MyAstroBoardCard extends HTMLElement {
         }
         if (eventType === 'Planetary Retrograde' && attr('planet')) {
             return compose('retrograde', { planet: translated('planet', attr('planet')) });
+        }
+        // Comet and shower names are proper names published as-is; only the wording around
+        // them is translated.
+        if (eventType === 'Comet Appearance' && attr('comet_name')) {
+            return compose('comet', { comet_name: attr('comet_name') });
+        }
+        if (eventType === 'Meteor Shower' && attr('shower_name')) {
+            return compose('meteor_shower', { shower_name: attr('shower_name') });
+        }
+        // Named Full Moon ("Beaver Supermoon"): folk_name and the flags are null for any other
+        // event and absent with an older board, which then falls through to the raw title.
+        const folkName = attr('folk_name');
+        if (eventType === 'Moon Phase' && folkName && t(`folk_name.${folkName}`) !== `folk_name.${folkName}`) {
+            let templateKey = 'full_moon_named';
+            if (attr('supermoon')) templateKey = 'supermoon_named';
+            else if (attr('micromoon')) templateKey = 'micromoon_named';
+            const title = compose(templateKey, { name: t(`folk_name.${folkName}`) });
+            return attr('blue_moon') ? `${title} - ${t('blue_moon')}` : title;
         }
         if (t(`moon_phase.${raw}`) !== `moon_phase.${raw}`) return t(`moon_phase.${raw}`);
         if (t(`event_title.${raw}`) !== `event_title.${raw}`) return t(`event_title.${raw}`);
