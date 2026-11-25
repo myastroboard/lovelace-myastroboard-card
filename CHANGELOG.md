@@ -4,11 +4,15 @@
 
 ### Features
 
-- None.
+- `tonight` mode, "Coming up": named Full Moons ("Beaver Supermoon", micromoon, Blue Moon) are
+  titled in the dashboard's language. Needs the `folk_name` / `supermoon` / `micromoon` /
+  `blue_moon` attributes of the next MyAstroBoard release; older boards keep the English title.
 
 ### Fixes
 
-- None.
+- `tonight` mode, "Coming up": comet and meteor shower events are now titled in the dashboard's
+  language (from the `comet_name` / `shower_name` attributes), and the day unit of relative
+  times ("in 3 d") is translated.
 
 ### Breaking changes
 
